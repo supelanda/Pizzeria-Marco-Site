@@ -673,49 +673,133 @@
       <p class="section-body">Oltre 30 combinazioni di ingredienti freschi. Disponibili in formato mini, normale e maxi — al taglio o intera.</p>
     </div>
     <div class="menu-tabs reveal">
-      <button class="tab-btn active">Classiche</button>
-      <button class="tab-btn">Speciali</button>
-      <button class="tab-btn">Bianche</button>
+      <button class="tab-btn active" data-filter="rossa">Classiche</button>
+      <button class="tab-btn" data-filter="speciale">Speciali</button>
+      <button class="tab-btn" data-filter="bianca">Bianche</button>
     </div>
-    <div class="menu-grid reveal">
-      <div class="menu-item">
+    <div class="menu-grid reveal" id="home-menu-grid">
+
+      <!-- ── CLASSICHE (rossa) ── -->
+      <div class="menu-item" data-cat="rossa">
         <span class="menu-item-emoji">🍅</span>
         <div class="menu-item-name">Margherita</div>
-        <div class="menu-item-desc">Pomodoro San Marzano, fior di latte, basilico fresco, olio EVO.</div>
-        <div class="menu-item-price"><span class="from">da</span>€ 6,50</div>
+        <div class="menu-item-desc">Pomodoro San Marzano, fior di latte, basilico fresco, olio EVO. La classica per eccellenza.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 7,00</div>
       </div>
-      <div class="menu-item">
-        <span class="menu-item-emoji">🍖</span>
+      <div class="menu-item" data-cat="rossa">
+        <span class="menu-item-emoji">🌶</span>
         <div class="menu-item-name">Diavola</div>
-        <div class="menu-item-desc">Salame piccante, mozzarella, pomodoro, peperoncino calabrese.</div>
-        <div class="menu-item-price"><span class="from">da</span>€ 8,00</div>
-      </div>
-      <div class="menu-item">
-        <span class="menu-special-tag">Top seller</span>
-        <span class="menu-item-emoji">🌿</span>
-        <div class="menu-item-name">Integrale Gourmet</div>
-        <div class="menu-item-desc">Base integrale, crema di zucchine, ricotta, noci e limone grattugiato.</div>
-        <div class="menu-item-price"><span class="from">da</span>€ 9,50</div>
-      </div>
-      <div class="menu-item">
-        <span class="menu-item-emoji">🧄</span>
-        <div class="menu-item-name">Quattro Stagioni</div>
-        <div class="menu-item-desc">Prosciutto cotto, funghi, carciofi, olive — un classico intramontabile.</div>
+        <div class="menu-item-desc">Salame piccante calabrese, mozzarella, pomodoro, peperoncino. Carattere deciso, impatto immediato.</div>
         <div class="menu-item-price"><span class="from">da</span>€ 8,50</div>
       </div>
-      <div class="menu-item">
+      <div class="menu-item" data-cat="rossa">
+        <span class="menu-special-tag">Più ordinata</span>
+        <span class="menu-item-emoji">🧄</span>
+        <div class="menu-item-name">Quattro Stagioni</div>
+        <div class="menu-item-desc">Prosciutto cotto, funghi trifolati, carciofi, olive taggiasche, pomodoro, mozzarella.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,50</div>
+      </div>
+      <div class="menu-item" data-cat="rossa">
+        <span class="menu-item-emoji">🍄</span>
+        <div class="menu-item-name">Prosciutto e Funghi</div>
+        <div class="menu-item-desc">Prosciutto cotto, funghi di bosco, mozzarella, pomodoro San Marzano. Equilibrio perfetto.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,00</div>
+      </div>
+      <div class="menu-item" data-cat="rossa">
+        <span class="menu-item-emoji">🐟</span>
+        <div class="menu-item-name">Napoli</div>
+        <div class="menu-item-desc">Pomodoro, mozzarella, acciughe del Cantabrico, capperi di Pantelleria, origano.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,00</div>
+      </div>
+      <div class="menu-item" data-cat="rossa">
+        <span class="menu-item-emoji">🫒</span>
+        <div class="menu-item-name">Capricciosa</div>
+        <div class="menu-item-desc">Prosciutto, funghi, carciofini, olive, wurstel, pomodoro, mozzarella. La pizza di chi non sa scegliere — e fa bene.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,50</div>
+      </div>
+
+      <!-- ── SPECIALI ── -->
+      <div class="menu-item" data-cat="speciale">
         <span class="menu-special-tag">Chef's choice</span>
         <span class="menu-item-emoji">✨</span>
-        <div class="menu-item-name">Khorasan & Tartufo</div>
-        <div class="menu-item-desc">Impasto Khorasan, crema di tartufo, mozzarella di bufala, rucola.</div>
+        <div class="menu-item-name">Khorasan al Tartufo</div>
+        <div class="menu-item-desc">Crema di tartufo nero, mozzarella di bufala, rucola a crudo, scaglie di grana. Solo impasto Khorasan.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 12,00</div>
+      </div>
+      <div class="menu-item" data-cat="speciale">
+        <span class="menu-special-tag">Chef's choice</span>
+        <span class="menu-item-emoji">🌸</span>
+        <div class="menu-item-name">Mortadella e Pistacchio</div>
+        <div class="menu-item-desc">Mortadella di Bologna IGP, crema di pistacchio di Bronte, stracciatella, limone. Elegante e sorprendente.</div>
         <div class="menu-item-price"><span class="from">da</span>€ 11,00</div>
       </div>
-      <div class="menu-item">
-        <span class="menu-item-emoji">🥗</span>
-        <div class="menu-item-name">Verdure di Stagione</div>
-        <div class="menu-item-desc">Verdure grigliate, mozzarella, origano — fresca e leggera, per chi ama il vegetariano.</div>
-        <div class="menu-item-price"><span class="from">da</span>€ 7,50</div>
+      <div class="menu-item" data-cat="speciale">
+        <span class="menu-item-emoji">🌿</span>
+        <div class="menu-item-name">Integrale Gourmet</div>
+        <div class="menu-item-desc">Base integrale, crema di zucchine, ricotta di bufala, noci, scorza di limone, menta fresca.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 9,50</div>
       </div>
+      <div class="menu-item" data-cat="speciale">
+        <span class="menu-item-emoji">🍂</span>
+        <div class="menu-item-name">Figata — Fichi e Crudo</div>
+        <div class="menu-item-desc">Confettura di fichi selvatici, prosciutto crudo 24 mesi, gorgonzola, mozzarella, rucola. Dolce-salato da antologia.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 10,50</div>
+      </div>
+      <div class="menu-item" data-cat="speciale">
+        <span class="menu-item-emoji">🐟</span>
+        <div class="menu-item-name">Salmone e Capperi</div>
+        <div class="menu-item-desc">Salmone norvegese affumicato, crème fraîche, capperi di Pantelleria, rucola, limone. Nordica ed elegante.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 11,50</div>
+      </div>
+      <div class="menu-item" data-cat="speciale">
+        <span class="menu-special-tag">Chef's choice</span>
+        <span class="menu-item-emoji">👑</span>
+        <div class="menu-item-name">Oro di Marco</div>
+        <div class="menu-item-desc">Crudo di Parma 36 mesi, burrata pugliese, tartufo nero estivo, rucola, olio EVO. La firma del pizzaiolo.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 13,00</div>
+      </div>
+
+      <!-- ── BIANCHE ── -->
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-special-tag">Più ordinata</span>
+        <span class="menu-item-emoji">🥗</span>
+        <div class="menu-item-name">Crudo e Rucola</div>
+        <div class="menu-item-desc">Prosciutto crudo, rucola selvaggia, grana a scaglie, pomodorini datterini, olio EVO. Fresca e irresistibile.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 9,50</div>
+      </div>
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-special-tag">Chef's choice</span>
+        <span class="menu-item-emoji">🫧</span>
+        <div class="menu-item-name">Bufala e Datterini</div>
+        <div class="menu-item-desc">Mozzarella di bufala campana, datterini confit, basilico, olio EVO. Semplicità assoluta — materia prima eccellente.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 11,00</div>
+      </div>
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-item-emoji">🥔</span>
+        <div class="menu-item-name">Patate e Rosmarino</div>
+        <div class="menu-item-desc">Patate a fettine, rosmarino fresco, olio EVO, sale grosso, mozzarella. Rustica, avvolgente, soddisfacente.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,50</div>
+      </div>
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-item-emoji">🧀</span>
+        <div class="menu-item-name">Quattro Formaggi</div>
+        <div class="menu-item-desc">Fior di latte, gorgonzola, asiago trentino stagionato, grana padano. Quattro personalità, un'unica armonia.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 9,00</div>
+      </div>
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-item-emoji">🍃</span>
+        <div class="menu-item-name">Ricotta e Spinaci</div>
+        <div class="menu-item-desc">Ricotta fresca, spinaci saltati all'aglio, mozzarella, noce moscata. Cremosa e delicata.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 8,00</div>
+      </div>
+      <div class="menu-item" data-cat="bianca">
+        <span class="menu-special-tag">Chef's choice</span>
+        <span class="menu-item-emoji">🌊</span>
+        <div class="menu-item-name">Stracciatella e Bresaola</div>
+        <div class="menu-item-desc">Stracciatella pugliese, bresaola della Valtellina, rucola, limone, olio EVO. Solo su impasto Khorasan.</div>
+        <div class="menu-item-price"><span class="from">da</span>€ 10,50</div>
+      </div>
+
     </div>
     <div style="text-align:center;margin-top:2.5rem;" class="reveal">
       <a href="pizzeria-marco-recensioni.html" class="btn-outline">Leggi tutte le 278 recensioni →</a>
@@ -931,12 +1015,24 @@
   }, { threshold: 0.12 });
   reveals.forEach(el => observer.observe(el));
 
-  // Menu tabs
+  // Menu tabs with filtering
   const tabs = document.querySelectorAll('.tab-btn');
+  const menuItems = document.querySelectorAll('#home-menu-grid .menu-item');
+
+  function filterMenu(filter) {
+    menuItems.forEach(item => {
+      item.style.display = (item.dataset.cat === filter) ? '' : 'none';
+    });
+  }
+
+  // Show only "rossa" by default
+  filterMenu('rossa');
+
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
+      filterMenu(tab.dataset.filter);
     });
   });
 </script>
