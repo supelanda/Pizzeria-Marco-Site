@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recensioni — Pizzeria Marco, Rovereto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #16100a;
+    --charcoal: #1e1710;
+    --deep:     #140f09;
+    --cream:    #f4e9d4;
+    --warm:     #ede0c4;
+    --gold:     #c9973a;
+    --gold-lt:  #e8c06a;
+    --terra:    #b85c2c;
+    --muted:    #8a7d68;
+    --border:   rgba(201,151,58,.22);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--charcoal);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    opacity:.4;
+  }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.2rem 4rem;
+    background:rgba(16,11,7,.97);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo {
+    font-family:'Playfair Display',serif; font-size:1.3rem;
+    letter-spacing:.08em; color:var(--gold-lt); text-decoration:none;
+  }
+  .nav-logo span { font-style:italic; color:var(--cream); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a {
+    font-size:.88rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold-lt); }
+  .nav-back {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.9rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none;
+    transition:color .2s; display:flex; align-items:center; gap:.5rem;
+  }
+  .nav-back:hover { color:var(--gold); }
+
+  /* HERO BANNER */
+  .page-hero {
+    position:relative; z-index:1;
+    padding: 11rem 2rem 6rem;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    background: linear-gradient(to bottom, rgba(184,92,44,.06) 0%, transparent 100%);
+    overflow:hidden;
+  }
+  .page-hero::after {
+    content:'';
+    position:absolute; width:60vw; height:60vw; border-radius:50%;
+    background:radial-gradient(circle, rgba(180,90,30,.1) 0%, transparent 70%);
+    top:50%; left:50%; transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  .page-hero-eyebrow {
+    font-size:.82rem; letter-spacing:.38em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:1.2rem; display:block;
+    opacity:0; animation:fadeUp .7s .1s forwards;
+  }
+  .page-hero-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3rem,8vw,6rem);
+    font-weight:900; line-height:.95; color:var(--cream);
+    opacity:0; animation:fadeUp .8s .25s forwards;
+  }
+  .page-hero-title em { display:block; font-style:italic; color:var(--gold-lt); }
+  .hero-score {
+    margin-top:2.4rem; display:flex; align-items:center; justify-content:center;
+    gap:2.5rem; flex-wrap:wrap;
+    opacity:0; animation:fadeUp .8s .5s forwards;
+  }
+  .score-big {
+    font-family:'Playfair Display',serif;
+    font-size:5rem; font-weight:900; color:var(--gold); line-height:1;
+  }
+  .score-details { text-align:left; }
+  .score-stars { color:var(--gold); font-size:1.6rem; letter-spacing:.1em; }
+  .score-count { font-size:.9rem; color:var(--muted); margin-top:.3rem; letter-spacing:.06em; }
+  .score-divider { width:1px; height:80px; background:var(--border); }
+  .score-breakdown { display:flex; flex-direction:column; gap:.4rem; }
+  .bar-row { display:flex; align-items:center; gap:.8rem; font-size:.85rem; color:var(--muted); }
+  .bar-track { width:120px; height:4px; background:rgba(201,151,58,.12); border-radius:2px; overflow:hidden; }
+  .bar-fill { height:100%; background:var(--gold); border-radius:2px; }
+  .bar-num { min-width:1.5rem; text-align:right; color:var(--cream); }
+
+  /* FILTERS */
+  .filters-bar {
+    position:relative; z-index:1;
+    padding:2rem 4rem;
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    border-bottom:1px solid var(--border);
+    background:rgba(16,11,7,.5);
+  }
+  .filter-label { font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-right:.5rem; }
+  .filter-pill {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.88rem; letter-spacing:.1em; text-transform:capitalize;
+    background:transparent; color:var(--muted);
+    border:1px solid var(--border); padding:.45rem 1.1rem;
+    cursor:pointer; transition:all .2s;
+  }
+  .filter-pill:hover, .filter-pill.active { background:var(--gold); color:var(--ink); border-color:var(--gold); }
+  .filter-count {
+    margin-left:auto;
+    font-size:.85rem; color:var(--muted); letter-spacing:.08em;
+  }
+
+  /* MAIN GRID */
+  .reviews-main {
+    position:relative; z-index:1;
+    padding:5rem 4rem 8rem;
+    max-width:1400px; margin:0 auto;
+  }
+
+  /* FEATURED REVIEW */
+  .featured-review {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #2a1f12, #1e1510);
+    border:1px solid rgba(201,151,58,.35);
+    padding:3.5rem;
+    position:relative; overflow:hidden;
+    margin-bottom:3rem;
+    opacity:0; animation:fadeUp .8s .3s forwards;
+  }
+  .featured-review::before {
+    content:'"';
+    font-family:'Playfair Display',serif;
+    font-size:14rem; line-height:.7;
+    color:var(--gold); opacity:.07;
+    position:absolute; top:0; left:1.5rem;
+    pointer-events:none;
+  }
+  .featured-badge {
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.72rem; letter-spacing:.25em; text-transform:uppercase;
+    color:var(--gold); border:1px solid var(--border); padding:.35rem .9rem;
+    margin-bottom:1.5rem;
+  }
+  .featured-text {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.3rem,2.5vw,1.7rem); font-style:italic;
+    color:var(--cream); line-height:1.55; max-width:780px;
+    position:relative; z-index:1;
+  }
+  .featured-meta {
+    margin-top:2rem; display:flex; align-items:center; gap:1.5rem;
+    flex-wrap:wrap;
+  }
+  .featured-meta .stars { color:var(--gold); font-size:1rem; letter-spacing:.08em; }
+  .featured-meta .author { font-size:.88rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+  .featured-meta .flag { font-size:1rem; }
+  .featured-meta .lang-badge {
+    font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    background:rgba(201,151,58,.12); color:var(--gold); padding:.25rem .6rem;
+    border:1px solid var(--border);
+  }
+
+  /* MASONRY GRID */
+  .reviews-grid {
+    columns: 3;
+    column-gap: 1.5rem;
+  }
+  @media(max-width:1100px){ .reviews-grid { columns:2; } }
+  @media(max-width:640px){ .reviews-grid { columns:1; } }
+
+  .review-card {
+    break-inside:avoid;
+    background:rgba(26,18,10,.85);
+    border:1px solid var(--border);
+    padding:2.2rem;
+    margin-bottom:1.5rem;
+    position:relative; overflow:hidden;
+    transition:border-color .25s, background .25s, transform .25s;
+    opacity:0;
+  }
+  .review-card.visible { opacity:1; }
+  .review-card:hover {
+    border-color:rgba(201,151,58,.5);
+    background:#221810;
+    transform:translateY(-3px);
+  }
+
+  /* Accent line on left */
+  .review-card::after {
+    content:''; position:absolute; left:0; top:15%; bottom:15%;
+    width:2px; background:var(--gold); opacity:0;
+    transition:opacity .25s;
+  }
+  .review-card:hover::after { opacity:1; }
+
+  .rc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; }
+  .rc-stars { color:var(--gold); font-size:.88rem; letter-spacing:.1em; }
+  .rc-lang {
+    font-size:.65rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); background:rgba(138,125,104,.08); padding:.2rem .5rem;
+    border:1px solid var(--border);
+  }
+  .rc-text {
+    font-size:1rem; font-style:italic;
+    color:var(--warm); line-height:1.65;
+    margin-bottom:1.4rem;
+  }
+  .rc-footer { display:flex; justify-content:space-between; align-items:flex-end; }
+  .rc-author {
+    font-size:.75rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted);
+  }
+  .rc-guide {
+    font-size:.68rem; letter-spacing:.1em; color:var(--gold); opacity:.65;
+  }
+  .rc-date { font-size:.72rem; color:var(--muted); opacity:.6; }
+
+  /* HIGHLIGHT TAGS */
+  .rc-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1rem; }
+  .rc-tag {
+    font-size:.65rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); border:1px solid rgba(138,125,104,.2); padding:.2rem .55rem;
+  }
+  .rc-tag.positive { border-color:rgba(201,151,58,.25); color:var(--gold); }
+
+  /* SECTION DIVIDERS */
+  .section-divider {
+    display:flex; align-items:center; gap:1.5rem;
+    margin:3rem 0 2rem;
+    font-size:.78rem; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--muted);
+  }
+  .section-divider::before, .section-divider::after {
+    content:''; flex:1; height:1px; background:var(--border);
+  }
+
+  /* CTA STRIP */
+  .reviews-cta {
+    position:relative; z-index:1;
+    background:linear-gradient(135deg, #231a0e, #1a1208);
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding:5rem 4rem;
+    text-align:center;
+  }
+  .reviews-cta h2 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(2rem,4vw,3rem); font-weight:700; color:var(--cream);
+    margin-bottom:1rem;
+  }
+  .reviews-cta h2 em { font-style:italic; color:var(--gold-lt); }
+  .reviews-cta p { font-size:1.1rem; color:var(--muted); max-width:460px; margin:0 auto 2rem; }
+  .btn-primary {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1rem; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+    background:var(--gold); color:var(--ink);
+    border:none; padding:.9rem 2.6rem; cursor:pointer;
+    transition:background .2s, transform .15s, box-shadow .2s;
+    text-decoration:none; display:inline-block;
+  }
+  .btn-primary:hover { background:var(--gold-lt); transform:translateY(-2px); box-shadow:0 8px 32px rgba(201,151,58,.3); }
+  .btn-outline {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1rem; letter-spacing:.18em; text-transform:uppercase;
+    background:transparent; color:var(--cream);
+    border:1px solid rgba(244,233,212,.3); padding:.9rem 2.6rem;
+    text-decoration:none; display:inline-block;
+    transition:border-color .2s, color .2s;
+    margin-left:1rem;
+  }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* FOOTER */
+  footer {
+    position:relative; z-index:1;
+    border-top:1px solid var(--border);
+    padding:3rem 0 2rem; text-align:center;
+  }
+  .footer-logo {
+    font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900;
+    color:var(--cream); margin-bottom:.4rem;
+  }
+  .footer-logo em { font-style:italic; color:var(--gold-lt); }
+  .footer-copy { font-size:.8rem; color:var(--muted); opacity:.55; margin-top:.8rem; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(22px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  @media(max-width:768px){
+    nav { padding:1rem 1.5rem; }
+    .filters-bar { padding:1.2rem 1.5rem; }
+    .reviews-main { padding:3rem 1.5rem 5rem; }
+    .featured-review { padding:2rem; }
+    .reviews-cta { padding:3.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="pizzeria-marco.html" class="nav-logo">Pizzeria <span>Marco</span></a>
+  <ul class="nav-links">
+    <li><a href="pizzeria-marco.html#about">Storia</a></li>
+    <li><a href="pizzeria-marco-menu.html">Menu</a></li>
+    <li><a href="#" class="active">Recensioni</a></li>
+    <li><a href="pizzeria-marco-dove-siamo.html">Dove siamo</a></li>
+  </ul>
+  <a href="pizzeria-marco.html" class="nav-back">← Torna al sito</a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <span class="page-hero-eyebrow">Le voci dei nostri ospiti</span>
+  <h1 class="page-hero-title">Cosa dicono<em>di noi</em></h1>
+  <div class="hero-score">
+    <div class="score-big">4.4</div>
+    <div class="score-details">
+      <div class="score-stars">★★★★☆</div>
+      <div class="score-count">278 recensioni su Google Maps</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-breakdown">
+      <div class="bar-row"><span>5 ★</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-num">72%</span></div>
+      <div class="bar-row"><span>4 ★</span><div class="bar-track"><div class="bar-fill" style="width:16%"></div></div><span class="bar-num">16%</span></div>
+      <div class="bar-row"><span>3 ★</span><div class="bar-track"><div class="bar-fill" style="width:6%"></div></div><span class="bar-num">6%</span></div>
+      <div class="bar-row"><span>2 ★</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-num">3%</span></div>
+      <div class="bar-row"><span>1 ★</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-num">3%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <span class="filter-label">Filtra per</span>
+  <button class="filter-pill active" onclick="filterReviews('all', this)">Tutte</button>
+  <button class="filter-pill" onclick="filterReviews('pizza', this)">🍕 Pizza</button>
+  <button class="filter-pill" onclick="filterReviews('staff', this)">😊 Staff</button>
+  <button class="filter-pill" onclick="filterReviews('integrale', this)">🌾 Integrale</button>
+  <button class="filter-pill" onclick="filterReviews('valore', this)">💰 Rapporto qualità/prezzo</button>
+  <button class="filter-pill" onclick="filterReviews('en', this)">🇬🇧 English</button>
+  <span class="filter-count" id="filter-count">278 recensioni</span>
+</div>
+
+<!-- MAIN REVIEWS AREA -->
+<div class="reviews-main">
+
+  <!-- FEATURED -->
+  <div class="featured-review" data-tags="pizza staff en">
+    <div class="featured-badge">✦ In evidenza</div>
+    <p class="featured-text">"To be honest it's one of the best pizza I ever tasted — the pizza maker was very friendly and was speaking English. Vibes in the pizzeria are also amazing and Marco's is located in a beautiful area near the theatre, near the city center. If I am ever going to be in Trento I will for sure come back."</p>
+    <div class="featured-meta">
+      <span class="stars">★★★★★</span>
+      <span class="flag">🇵🇱</span>
+      <span class="author">Kry Lis</span>
+      <span class="lang-badge">EN</span>
+      <span style="font-size:.8rem;color:var(--muted);opacity:.6;">8 mesi fa</span>
+    </div>
+  </div>
+
+  <div class="section-divider">Recensioni recenti</div>
+
+  <!-- MASONRY GRID -->
+  <div class="reviews-grid" id="reviews-grid">
+
+    <div class="review-card" data-tags="pizza staff valore integrale">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">integrale</span><span class="rc-tag positive">staff simpatico</span></div>
+      <p class="rc-text">"Super pizza — super Aperol. La pizza integrale è da provare assolutamente, leggerissima e saporita."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Mara Mrzik</div><div class="rc-date">4 mesi fa</div></div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">locals favourite</span><span class="rc-tag positive">outdoor seating</span></div>
+      <p class="rc-text">"Go where the locals go — this describes this pizzeria perfectly. Fresh, vegetarian options, English-speaking staff. Near the centre with outdoor seating and plenty of parking."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Josef W</div><div class="rc-guide">Local Guide · 315 recensioni</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="valore pizza">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">rapporto qualità/prezzo</span><span class="rc-tag positive">veloce</span></div>
+      <p class="rc-text">"Pizzaiolo velocissimo, nessuna attesa per una pizza eccellente. Un'ottima scelta per il pranzo in pausa."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Samuele Affuso</div><div class="rc-guide">Local Guide</div></div>
+        <div class="rc-date">3 mesi fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">amazing value</span></div>
+      <p class="rc-text">"Fantastic pizzas and amazing value. So good we went three times in one week."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Martin Armer</div><div class="rc-guide">Local Guide · 53 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff integrale en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">integrale dough</span><span class="rc-tag positive">friendly owner</span></div>
+      <p class="rc-text">"Super nice pizza. The integrale base is a top choice. Really enjoyed it and the guy that runs it is super friendly!!"</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Robert Vokes</div><div class="rc-guide">Local Guide · 78 recensioni</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">impasto</span><span class="rc-tag positive">familiare</span></div>
+      <p class="rc-text">"Pizze deliziose e personale molto simpatico. I soli bei momenti del mio soggiorno a Rovereto li ho trascorsi qui."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Eleonora Monoscalco</div><div class="rc-guide">Local Guide · 301 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">pizza paradise</span></div>
+      <p class="rc-text">"From the outside it doesn't look like much, but inside it's a true paradise for pizza lovers. If you're in the area looking for a good affordable meal — this is the place."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Sebastian Stocker</div><div class="rc-guide">Local Guide · 103 recensioni</div></div>
+        <div class="rc-date">6 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">simpatici</span><span class="rc-tag positive">cani benvenuti</span></div>
+      <p class="rc-text">"Abbiamo mangiato nonostante i posti limitati. Il proprietario era molto simpatico e le pizze deliziose. I cani sono benvenuti."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Gianluca Aiello</div><div class="rc-guide">Local Guide · 58 recensioni</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">impasto perfetto</span><span class="rc-tag positive">veloce</span></div>
+      <p class="rc-text">"Personale rispettoso, amabile e soprattutto molto simpatico. Le pizze sono assolutamente deliziose e perfettamente preparate. Bravo!"</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Andrea Scrinzi</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">Albert</span><span class="rc-tag positive">friendly staff</span></div>
+      <p class="rc-text">"We visited Pizzeria Marco today. Albert and Mario were working. They are very kind and nice — Albert is very funny! The pizzas are good. I highly recommend visiting."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Paul</div><div class="rc-guide">Local Guide · 143 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza integrale valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">khorasan</span><span class="rc-tag positive">farine speciali</span></div>
+      <p class="rc-text">"Tra le migliori pizze di Rovereto! Farine disponibili: normale, kamut e integrale — da provare assolutamente! Fortemente consigliata."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Sergio Dordi</div><div class="rc-guide">Local Guide · 9 recensioni</div></div>
+        <div class="rc-date">8 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="staff pizza valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">camionista habitué</span></div>
+      <p class="rc-text">"Sono autista di camion in Trentino, quindi ogni volta che mi fermo a Rovereto mi fermo da loro per una pizza. Servizio eccellente, cibo eccellente, personale molto simpatico. Li consiglio al 100%."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Fabrizio Talarico</div><div class="rc-guide">Local Guide · 16 recensioni</div></div>
+        <div class="rc-date">un anno fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">pizza only</span><span class="rc-tag positive">fantastic</span></div>
+      <p class="rc-text">"A pizza-only menu but it is fantastic pizza! Very friendly pizzamaker as well."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Scott Doran</div><div class="rc-guide">Local Guide · 56 recensioni</div></div>
+        <div class="rc-date">5 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">DE</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">preis-leistung</span><span class="rc-tag positive">sympathisch</span></div>
+      <p class="rc-text">"Deliziose pizze e un pizzaiolo simpatico. Se cercate una buona pizza a prezzo accessibile, senza fronzoli — è il posto giusto."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Christian Kühner</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">esperienza</span><span class="rc-tag positive">convivialità</span></div>
+      <p class="rc-text">"Eccellente pizzeria, gestita da uno staff fedele da anni. Esperienza, convivialità e una pizza deliziosa: la voglia di cantare torna..."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Gianluigi Cisonno</div><div class="rc-guide">Local Guide · 95 recensioni</div></div>
+        <div class="rc-date">5 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">pizza leggera</span><span class="rc-tag positive">decontract</span></div>
+      <p class="rc-text">"Deliziosa pizza, fine e ben condita. Personale amabile, cortese e veloce! Un posto informale e giovane. Da consigliare!"</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Susy Guad</div></div>
+        <div class="rc-date">8 mesi fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore en">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">EN</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">January warmth</span></div>
+      <p class="rc-text">"Small friendly pizzeria. Our pizzas were made fresh and tasted delicious. There are maybe thirty different topping combinations on the board. We were cold coming in on a January Sunday night after a long walk and the warmth was everything."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Sergey Lipnevich</div><div class="rc-guide">Local Guide · 36 recensioni</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">sorpresa piacevole</span></div>
+      <p class="rc-text">"Abbiamo scoperto questo posto per caso e siamo rimasti piacevolmente sorpresi dalla qualità della pizza. Ha davvero superato le nostre aspettative. Il pizzaiolo era eccellente, simpatico e disponibile."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Francesco Virtuani</div><div class="rc-guide">Local Guide · 54 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">DE</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">einfach</span><span class="rc-tag positive">hervorragend</span></div>
+      <p class="rc-text">"Una semplice pizzeria con ottime pizze a prezzi ragionevoli — è tutto ciò che offrono. Personale accogliente, posti a sedere semplici in una strada tranquilla. Ci torneremo senza esitare."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Gabriele Grombach</div><div class="rc-guide">Local Guide · 149 recensioni</div></div>
+        <div class="rc-date">2 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">pizza al volo</span><span class="rc-tag positive">leggerissima</span></div>
+      <p class="rc-text">"Pizza al volo buona, leggera e a buon mercato, preparazione rapida, si può mangiare fuori ma anche dentro. Per una pausa pranzo rapida, è il posto ideale."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Skrappy Amg</div><div class="rc-guide">Local Guide · 23 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza integrale valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">integrale</span><span class="rc-tag positive">consegna</span></div>
+      <p class="rc-text">"Essendo una pizzeria da asporto più che un ristorante tradizionale, ci sono alcuni tavoli. Ampia scelta di guarnizioni, con impasti integrali e al kamut. Consegna a domicilio disponibile. Eccellente!"</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Giulio Filippi</div><div class="rc-guide">Local Guide · 171 recensioni</div></div>
+        <div class="rc-date">3 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">pasto veloce</span><span class="rc-tag positive">cortesia</span></div>
+      <p class="rc-text">"Ottima sorpresa vicino al centro città: pizze eccellenti, prezzi ragionevoli e servizio caldo."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Michi Pisani</div></div>
+        <div class="rc-date">5 anni fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza staff">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <p class="rc-text">"Personale molto simpatico e pizza eccellente! Continuate così!"</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">Gabriele Longhi</div></div>
+        <div class="rc-date">un anno fa</div>
+      </div>
+    </div>
+
+    <div class="review-card" data-tags="pizza valore">
+      <div class="rc-header"><div class="rc-stars">★★★★★</div><span class="rc-lang">IT</span></div>
+      <div class="rc-tags"><span class="rc-tag positive">maxi pizza</span></div>
+      <p class="rc-text">"Perché a mio avviso anche la versione maxi della pizza è la migliore di Rovereto."</p>
+      <div class="rc-footer">
+        <div><div class="rc-author">donatella (Dody)</div><div class="rc-guide">Local Guide · 144 recensioni</div></div>
+        <div class="rc-date">6 anni fa</div>
+      </div>
+    </div>
+
+  </div><!-- end grid -->
+</div>
+
+<!-- CTA STRIP -->
+<div class="reviews-cta">
+  <h2>Vieni a scoprirlo <em>di persona</em></h2>
+  <p>Le parole non bastano — la pizza va assaggiata. Siamo a Rovereto, vicino al teatro, ogni giorno.</p>
+  <a href="pizzeria-marco-dove-siamo.html" class="btn-primary">Dove siamo</a>
+  <a href="pizzeria-marco-menu.html" class="btn-outline">Scopri il menu</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Pizzeria <em>Marco</em></div>
+  <div class="footer-copy">© 2025 Pizzeria Marco · Vicolo Paganini, Rovereto (TN) · Tutti i diritti riservati</div>
+</footer>
+
+<script>
+  // Staggered card reveal
+  const cards = document.querySelectorAll('.review-card');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if(e.isIntersecting){
+        setTimeout(() => {
+          e.target.style.transition = 'opacity .55s ease, transform .55s ease, border-color .25s, background .25s';
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.opacity = '1';
+          e.target.classList.add('visible');
+        }, (Array.from(cards).indexOf(e.target) % 3) * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  cards.forEach(c => {
+    c.style.transform = 'translateY(18px)';
+    obs.observe(c);
+  });
+
+  // Filter logic
+  function filterReviews(tag, btn) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const grid = document.getElementById('reviews-grid');
+    const allCards = grid.querySelectorAll('.review-card');
+    let visible = 0;
+    allCards.forEach(card => {
+      const tags = card.dataset.tags || '';
+      if(tag === 'all' || tags.includes(tag)){
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    document.getElementById('filter-count').textContent = visible + ' recensioni';
+  }
+</script>
+</body>
+</html>

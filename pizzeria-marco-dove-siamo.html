@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dove Siamo — Pizzeria Marco, Rovereto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #16100a;
+    --charcoal: #1e1710;
+    --deep:     #130e08;
+    --cream:    #f4e9d4;
+    --warm:     #ede0c4;
+    --gold:     #c9973a;
+    --gold-lt:  #e8c06a;
+    --gold-dim: rgba(201,151,58,.18);
+    --terra:    #b85c2c;
+    --muted:    #8a7d68;
+    --border:   rgba(201,151,58,.22);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--charcoal);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    opacity:.4;
+  }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.2rem 4rem;
+    background:rgba(16,11,7,.97);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo {
+    font-family:'Playfair Display',serif; font-size:1.3rem;
+    letter-spacing:.08em; color:var(--gold-lt); text-decoration:none;
+  }
+  .nav-logo span { font-style:italic; color:var(--cream); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a {
+    font-size:.88rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold-lt); }
+  .nav-back {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.9rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s;
+  }
+  .nav-back:hover { color:var(--gold); }
+
+  /* PAGE HERO */
+  .page-hero {
+    position:relative; z-index:1;
+    padding:11rem 4rem 5rem;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+  }
+  .page-hero-inner { max-width:580px; }
+  .eyebrow {
+    font-size:.82rem; letter-spacing:.38em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:1.2rem; display:block;
+    opacity:0; animation:fadeUp .7s .1s forwards;
+  }
+  .page-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3rem,7vw,5.5rem);
+    font-weight:900; line-height:.95; color:var(--cream);
+    opacity:0; animation:fadeUp .8s .25s forwards;
+  }
+  .page-title em { display:block; font-style:italic; color:var(--gold-lt); }
+  .page-sub {
+    margin-top:1.6rem; font-size:1.1rem; color:var(--muted); max-width:420px;
+    opacity:0; animation:fadeUp .8s .4s forwards;
+  }
+  /* Decorative compass in hero */
+  .hero-compass {
+    position:absolute; right:6rem; top:50%; transform:translateY(-50%);
+    width:220px; height:220px; opacity:.06;
+    pointer-events:none;
+    opacity:0; animation:fadeUp 1s .6s forwards;
+  }
+
+  /* MAIN LAYOUT */
+  .main-wrap {
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1fr 1fr;
+    min-height:80vh;
+    border-bottom:1px solid var(--border);
+  }
+
+  /* ── STYLED MAP ── */
+  .map-panel {
+    position:relative; overflow:hidden;
+    background:var(--deep);
+    border-right:1px solid var(--border);
+  }
+
+  /* Subtle dot-grid background for the map area */
+  .map-panel::before {
+    content:''; position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(201,151,58,.14) 1px, transparent 1px);
+    background-size:28px 28px;
+    background-position:14px 14px;
+    pointer-events:none;
+  }
+
+  .map-svg-wrap {
+    position:relative; width:100%; height:100%; min-height:600px;
+    display:flex; align-items:center; justify-content:center;
+    padding:3rem;
+  }
+
+  .map-svg-wrap svg {
+    width:100%; max-width:520px; height:auto;
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,.5));
+  }
+
+  /* Pin pulse animation */
+  @keyframes pinPulse {
+    0%,100% { r: 12; opacity:.35; }
+    50%      { r: 22; opacity:.1; }
+  }
+  @keyframes pinPulse2 {
+    0%,100% { r: 8; opacity:.5; }
+    50%      { r: 16; opacity:.15; }
+  }
+  .pin-pulse-1 { animation: pinPulse 2.5s ease-in-out infinite; }
+  .pin-pulse-2 { animation: pinPulse2 2.5s ease-in-out .4s infinite; }
+
+  /* Map watermark label */
+  .map-watermark {
+    position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+    font-size:.65rem; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--muted); opacity:.45;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .map-watermark::before, .map-watermark::after {
+    content:''; width:30px; height:1px; background:currentColor;
+  }
+
+  /* Map corner ornament */
+  .map-corner {
+    position:absolute; top:1.2rem; right:1.2rem;
+    width:60px; height:60px; opacity:.25;
+  }
+
+  /* Open Maps button on map */
+  .map-open-btn {
+    position:absolute; bottom:3.5rem; left:50%; transform:translateX(-50%);
+    font-family:'Cormorant Garamond',serif;
+    font-size:.82rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); text-decoration:none;
+    background:rgba(16,11,7,.85); border:1px solid var(--border);
+    padding:.6rem 1.6rem;
+    backdrop-filter:blur(8px);
+    transition:border-color .2s, background .2s;
+    white-space:nowrap;
+  }
+  .map-open-btn:hover { border-color:var(--gold); background:rgba(201,151,58,.1); }
+
+  /* ── INFO PANEL ── */
+  .info-panel {
+    padding:5rem 4rem;
+    display:flex; flex-direction:column; gap:3.5rem;
+  }
+
+  .info-block {}
+  .info-block-label {
+    font-size:.75rem; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:.8rem;
+  }
+  .info-block-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .info-address {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem; line-height:1.4; color:var(--cream);
+  }
+  .info-address-sub {
+    font-size:.95rem; color:var(--muted); margin-top:.5rem; font-style:italic;
+  }
+
+  /* Hours table */
+  .hours-table { width:100%; }
+  .hours-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:.55rem 0; border-bottom:1px solid rgba(201,151,58,.07);
+    font-size:1rem;
+  }
+  .hours-row:last-child { border-bottom:none; }
+  .hours-row .day { color:var(--muted); font-size:.95rem; }
+  .hours-row .time { color:var(--cream); }
+  .hours-row.today .day,
+  .hours-row.today .time { color:var(--gold); }
+  .today-badge {
+    font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
+    background:rgba(201,151,58,.15); color:var(--gold);
+    padding:.2rem .55rem; border:1px solid var(--border); margin-left:.5rem;
+  }
+  .hours-row.closed .time { color:var(--muted); opacity:.5; }
+
+  /* Services */
+  .services-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:.7rem;
+  }
+  .service-item {
+    display:flex; align-items:center; gap:.7rem;
+    font-size:.9rem; color:var(--muted); padding:.6rem .9rem;
+    border:1px solid var(--border);
+    transition:border-color .2s, color .2s;
+  }
+  .service-item:hover { border-color:rgba(201,151,58,.4); color:var(--cream); }
+  .service-icon { font-size:1.1rem; flex-shrink:0; }
+
+  /* Transport */
+  .transport-list { display:flex; flex-direction:column; gap:.8rem; }
+  .transport-item {
+    display:flex; gap:1rem; align-items:flex-start;
+  }
+  .transport-icon {
+    width:2.2rem; height:2.2rem; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0; color:var(--gold);
+  }
+  .transport-text { font-size:.9rem; color:var(--muted); }
+  .transport-text strong { display:block; color:var(--cream); font-size:.95rem; margin-bottom:.15rem; }
+
+  /* CTA buttons */
+  .cta-row { display:flex; gap:1rem; flex-wrap:wrap; padding-top:1rem; }
+  .btn-primary {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.95rem; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+    background:var(--gold); color:var(--ink);
+    border:none; padding:.85rem 2.2rem; cursor:pointer;
+    text-decoration:none; display:inline-block;
+    transition:background .2s, transform .15s, box-shadow .2s;
+  }
+  .btn-primary:hover { background:var(--gold-lt); transform:translateY(-2px); box-shadow:0 8px 28px rgba(201,151,58,.3); }
+  .btn-outline {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.95rem; letter-spacing:.18em; text-transform:uppercase;
+    background:transparent; color:var(--cream);
+    border:1px solid rgba(244,233,212,.25); padding:.85rem 2.2rem;
+    text-decoration:none; display:inline-block;
+    transition:border-color .2s, color .2s;
+  }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* ── NEIGHBOURHOOD ── */
+  .neighbourhood {
+    position:relative; z-index:1;
+    padding:6rem 4rem;
+    border-bottom:1px solid var(--border);
+  }
+  .neighbourhood h2 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:700; color:var(--cream);
+    margin-bottom:.8rem;
+  }
+  .neighbourhood h2 em { font-style:italic; color:var(--gold-lt); }
+  .neighbourhood-sub { font-size:1.05rem; color:var(--muted); max-width:520px; margin-bottom:3rem; }
+  .poi-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border);
+  }
+  .poi-item {
+    background:var(--charcoal); padding:2rem 1.5rem;
+    transition:background .25s;
+  }
+  .poi-item:hover { background:#221810; }
+  .poi-emoji { font-size:1.8rem; margin-bottom:.7rem; display:block; }
+  .poi-name {
+    font-family:'Playfair Display',serif;
+    font-size:1rem; font-weight:600; color:var(--cream); margin-bottom:.35rem;
+  }
+  .poi-desc { font-size:.85rem; color:var(--muted); line-height:1.45; }
+  .poi-dist {
+    margin-top:.7rem; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold); opacity:.7;
+  }
+
+  /* FOOTER */
+  footer {
+    position:relative; z-index:1;
+    border-top:1px solid var(--border);
+    padding:3rem 0 2rem; text-align:center;
+  }
+  .footer-logo {
+    font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900;
+    color:var(--cream); margin-bottom:.4rem;
+  }
+  .footer-logo em { font-style:italic; color:var(--gold-lt); }
+  .footer-copy { font-size:.8rem; color:var(--muted); opacity:.55; margin-top:.8rem; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .reveal { opacity:0; transform:translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  @media(max-width:900px){
+    nav { padding:1rem 1.5rem; }
+    .nav-links { display:none; }
+    .page-hero { padding:9rem 1.5rem 3.5rem; }
+    .hero-compass { display:none; }
+    .main-wrap { grid-template-columns:1fr; }
+    .map-panel { border-right:none; border-bottom:1px solid var(--border); }
+    .map-svg-wrap { min-height:400px; }
+    .info-panel { padding:3rem 1.5rem; }
+    .neighbourhood { padding:4rem 1.5rem; }
+    .poi-grid { grid-template-columns:1fr 1fr; }
+    .services-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="pizzeria-marco.html" class="nav-logo">Pizzeria <span>Marco</span></a>
+  <ul class="nav-links">
+    <li><a href="pizzeria-marco.html#about">Storia</a></li>
+    <li><a href="pizzeria-marco-menu.html">Menu</a></li>
+    <li><a href="pizzeria-marco-recensioni.html">Recensioni</a></li>
+    <li><a href="#" class="active">Dove siamo</a></li>
+  </ul>
+  <a href="pizzeria-marco.html" class="nav-back">← Home</a>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <span class="eyebrow">Rovereto · Trentino</span>
+    <h1 class="page-title">Trovaci<em>al centro.</em></h1>
+    <p class="page-sub">Nel cuore di Rovereto, a due passi dal teatro e dal centro storico — facile da raggiungere, impossibile dimenticare.</p>
+  </div>
+  <!-- Decorative compass rose -->
+  <svg class="hero-compass" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#c9973a" stroke-width="1"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#c9973a" stroke-width=".5" stroke-dasharray="4,6"/>
+    <circle cx="100" cy="100" r="50" fill="none" stroke="#c9973a" stroke-width="1"/>
+    <line x1="100" y1="10" x2="100" y2="190" stroke="#c9973a" stroke-width=".5"/>
+    <line x1="10" y1="100" x2="190" y2="100" stroke="#c9973a" stroke-width=".5"/>
+    <line x1="29" y1="29" x2="171" y2="171" stroke="#c9973a" stroke-width=".3"/>
+    <line x1="171" y1="29" x2="29" y2="171" stroke="#c9973a" stroke-width=".3"/>
+    <polygon points="100,10 94,45 100,40 106,45" fill="#c9973a"/>
+    <polygon points="100,190 94,155 100,160 106,155" fill="#c9973a" opacity=".4"/>
+    <polygon points="10,100 45,94 40,100 45,106" fill="#c9973a" opacity=".4"/>
+    <polygon points="190,100 155,94 160,100 155,106" fill="#c9973a" opacity=".4"/>
+    <text x="100" y="7" text-anchor="middle" fill="#c9973a" font-size="10" font-family="serif">N</text>
+    <text x="100" y="197" text-anchor="middle" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">S</text>
+    <text x="196" y="104" text-anchor="end" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">E</text>
+    <text x="4" y="104" text-anchor="start" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">O</text>
+    <circle cx="100" cy="100" r="6" fill="#c9973a"/>
+    <circle cx="100" cy="100" r="3" fill="#16100a"/>
+  </svg>
+</section>
+
+<!-- MAIN: MAP + INFO -->
+<div class="main-wrap">
+
+  <!-- STYLED MAP -->
+  <div class="map-panel">
+    <div class="map-svg-wrap">
+
+      <!-- Corner ornament -->
+      <svg class="map-corner" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0 L60 0 L60 5 L5 5 L5 60 L0 60 Z" fill="#c9973a"/>
+        <path d="M10 10 L60 10 L60 12 L12 12 L12 60 L10 60 Z" fill="#c9973a" opacity=".4"/>
+      </svg>
+
+      <svg viewBox="0 0 560 480" xmlns="http://www.w3.org/2000/svg" aria-label="Mappa stilizzata di Rovereto centro">
+        <defs>
+          <!-- Pin glow gradient -->
+          <radialGradient id="pinGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c9973a" stop-opacity=".6"/>
+            <stop offset="100%" stop-color="#c9973a" stop-opacity="0"/>
+          </radialGradient>
+          <!-- River gradient -->
+          <linearGradient id="riverGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1e2d3d" stop-opacity=".8"/>
+            <stop offset="50%" stop-color="#24384d" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#1e2d3d" stop-opacity=".8"/>
+          </linearGradient>
+          <!-- Block fill -->
+          <pattern id="blockPattern" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+            <rect width="4" height="4" fill="#1a1208"/>
+            <rect width="2" height="2" fill="#1e1510"/>
+          </pattern>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ─── MAP BACKGROUND ─── -->
+        <rect width="560" height="480" fill="#130e08"/>
+
+        <!-- Subtle grid overlay -->
+        <g opacity=".04">
+          <line x1="0" y1="80" x2="560" y2="80" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="0" y1="160" x2="560" y2="160" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="0" y1="240" x2="560" y2="240" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="0" y1="320" x2="560" y2="320" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="0" y1="400" x2="560" y2="400" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="80" y1="0" x2="80" y2="480" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="160" y1="0" x2="160" y2="480" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="240" y1="0" x2="240" y2="480" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="320" y1="0" x2="320" y2="480" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="400" y1="0" x2="400" y2="480" stroke="#c9973a" stroke-width=".5"/>
+          <line x1="480" y1="0" x2="480" y2="480" stroke="#c9973a" stroke-width=".5"/>
+        </g>
+
+        <!-- ─── ADIGE RIVER ─── -->
+        <path d="M 480 0 C 490 80 500 140 495 200 C 490 260 480 310 488 380 C 494 430 498 460 500 480"
+              fill="none" stroke="url(#riverGrad)" stroke-width="28" stroke-linecap="round" opacity=".9"/>
+        <path d="M 480 0 C 490 80 500 140 495 200 C 490 260 480 310 488 380 C 494 430 498 460 500 480"
+              fill="none" stroke="#1a2d42" stroke-width="22" stroke-linecap="round"/>
+        <!-- River label -->
+        <text transform="translate(511,240) rotate(15)" font-family="'Cormorant Garamond',serif" font-size="10" fill="#3a6080" letter-spacing="3" opacity=".7">ADIGE</text>
+
+        <!-- ─── CITY BLOCKS (background buildings) ─── -->
+        <!-- Block cluster top-left -->
+        <rect x="30" y="40" width="80" height="50" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="40" y="50" width="60" height="30" rx="1" fill="#1d1812" opacity=".8"/>
+        <rect x="120" y="30" width="60" height="60" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="30" y="110" width="110" height="40" rx="2" fill="#1c1711" opacity=".7"/>
+
+        <!-- Block cluster center -->
+        <rect x="60" y="200" width="70" height="55" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="150" y="190" width="50" height="45" rx="2" fill="#1c1711" opacity=".7"/>
+        <rect x="60" y="270" width="55" height="45" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="130" y="260" width="70" height="50" rx="2" fill="#1c1711" opacity=".7"/>
+
+        <!-- Block cluster top-right (before river) -->
+        <rect x="360" y="30" width="60" height="50" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="360" y="100" width="55" height="40" rx="2" fill="#1c1711" opacity=".7"/>
+        <rect x="370" y="160" width="65" height="45" rx="2" fill="#1a1510" opacity=".8"/>
+
+        <!-- Block cluster mid-right -->
+        <rect x="340" y="240" width="80" height="55" rx="2" fill="#1a1510" opacity=".8"/>
+        <rect x="360" y="310" width="60" height="45" rx="2" fill="#1c1711" opacity=".7"/>
+
+        <!-- ─── MAIN ROADS ─── -->
+        <!-- Corso Rosmini — main horizontal artery -->
+        <path d="M 0 230 L 560 230" stroke="#2a2015" stroke-width="18"/>
+        <path d="M 0 230 L 560 230" stroke="#c9973a" stroke-width="1.5" opacity=".6"/>
+        <!-- Road center line -->
+        <line x1="0" y1="230" x2="560" y2="230" stroke="#c9973a" stroke-width=".5" stroke-dasharray="12,10" opacity=".2"/>
+
+        <!-- Via Dante — diagonal / parallel -->
+        <path d="M 0 170 Q 150 165 280 175 Q 380 182 560 178" stroke="#221910" stroke-width="12"/>
+        <path d="M 0 170 Q 150 165 280 175 Q 380 182 560 178" stroke="#c9973a" stroke-width="1" opacity=".4"/>
+
+        <!-- Corso Bettini / pedestrian -->
+        <path d="M 0 290 Q 200 288 400 285 L 560 285" stroke="#221910" stroke-width="10"/>
+        <path d="M 0 290 Q 200 288 400 285 L 560 285" stroke="#c9973a" stroke-width=".8" opacity=".35"/>
+
+        <!-- Via Mercerie / small street -->
+        <path d="M 0 340 L 430 340" stroke="#1d1610" stroke-width="7"/>
+        <path d="M 0 340 L 430 340" stroke="#c9973a" stroke-width=".6" opacity=".25"/>
+
+        <!-- Largo Adua — near theatre -->
+        <path d="M 0 400 Q 180 400 250 395 L 430 390" stroke="#221910" stroke-width="14"/>
+        <path d="M 0 400 Q 180 400 250 395 L 430 390" stroke="#c9973a" stroke-width="1.2" opacity=".45"/>
+
+        <!-- Via Maffei / vertical main -->
+        <path d="M 200 0 Q 205 120 210 240 Q 215 360 218 480" stroke="#2a2015" stroke-width="16"/>
+        <path d="M 200 0 Q 205 120 210 240 Q 215 360 218 480" stroke="#c9973a" stroke-width="1.2" opacity=".5"/>
+
+        <!-- Via della Pietra / vertical secondary -->
+        <path d="M 300 0 Q 302 100 305 230 Q 308 350 310 480" stroke="#221910" stroke-width="10"/>
+        <path d="M 300 0 Q 302 100 305 230 Q 308 350 310 480" stroke="#c9973a" stroke-width=".8" opacity=".35"/>
+
+        <!-- Vicolo Paganini — THE STREET (small alley, highlighted) -->
+        <path d="M 263 320 L 263 410" stroke="#c9973a" stroke-width="5" opacity=".9" filter="url(#glow)"/>
+        <!-- Vicolo glow -->
+        <path d="M 263 320 L 263 410" stroke="#e8c06a" stroke-width="2" opacity=".6"/>
+
+        <!-- A couple more minor streets for density -->
+        <path d="M 80 0 L 85 480" stroke="#1c1510" stroke-width="7"/>
+        <path d="M 80 0 L 85 480" stroke="#c9973a" stroke-width=".4" opacity=".18"/>
+
+        <path d="M 0 100 Q 300 98 430 102 L 480 100" stroke="#1d1611" stroke-width="8"/>
+        <path d="M 0 100 Q 300 98 430 102 L 480 100" stroke="#c9973a" stroke-width=".5" opacity=".2"/>
+
+        <path d="M 0 450 L 460 448" stroke="#1d1611" stroke-width="8"/>
+        <path d="M 0 450 L 460 448" stroke="#c9973a" stroke-width=".5" opacity=".2"/>
+
+        <!-- ─── TEATRO ZANDONAI — landmark block ─── -->
+        <rect x="155" y="355" width="90" height="70" rx="3" fill="#241c10" stroke="#c9973a" stroke-width="1.2" opacity=".9"/>
+        <!-- Theatre hatching decoration -->
+        <rect x="160" y="360" width="80" height="60" rx="2" fill="none" stroke="#c9973a" stroke-width=".4" stroke-dasharray="3,5" opacity=".3"/>
+        <line x1="175" y1="355" x2="175" y2="425" stroke="#c9973a" stroke-width=".4" opacity=".2"/>
+        <line x1="200" y1="355" x2="200" y2="425" stroke="#c9973a" stroke-width=".4" opacity=".2"/>
+        <line x1="225" y1="355" x2="225" y2="425" stroke="#c9973a" stroke-width=".4" opacity=".2"/>
+        <text x="200" y="387" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8.5" fill="#c9973a" letter-spacing="1" opacity=".9">TEATRO</text>
+        <text x="200" y="400" text-anchor="middle" font-family="'Playfair Display',serif" font-size="7.5" fill="#e8c06a" letter-spacing="1.5" opacity=".85">ZANDONAI</text>
+
+        <!-- ─── PIAZZA ROSMINI ─── -->
+        <ellipse cx="110" cy="230" rx="38" ry="28" fill="#191309" stroke="#c9973a" stroke-width=".8" opacity=".75"/>
+        <text x="110" y="228" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="7" fill="#c9973a" letter-spacing=".5" opacity=".7">Pza.</text>
+        <text x="110" y="238" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="7.5" fill="#c9973a" letter-spacing="1" opacity=".8">ROSMINI</text>
+
+        <!-- ─── ROAD LABELS ─── -->
+        <!-- Corso Rosmini label -->
+        <rect x="20" y="210" width="130" height="14" rx="1" fill="rgba(19,14,8,.85)"/>
+        <text x="85" y="221" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8.5" fill="#c9973a" letter-spacing="2" opacity=".9">CORSO ROSMINI</text>
+
+        <!-- Via Dante label -->
+        <rect x="390" y="155" width="80" height="13" rx="1" fill="rgba(19,14,8,.8)"/>
+        <text x="430" y="165" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8" fill="#c9973a" letter-spacing="1.5" opacity=".75">VIA DANTE</text>
+
+        <!-- Largo Adua label -->
+        <rect x="30" y="382" width="90" height="13" rx="1" fill="rgba(19,14,8,.8)"/>
+        <text x="75" y="392" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8" fill="#c9973a" letter-spacing="1.2" opacity=".75">LARGO ADUA</text>
+
+        <!-- Via Maffei label -->
+        <text transform="translate(192,70) rotate(90)" font-family="'Cormorant Garamond',serif" font-size="8" fill="#c9973a" letter-spacing="1.5" opacity=".6">VIA MAFFEI</text>
+
+        <!-- Vicolo Paganini label — glowing -->
+        <rect x="270" y="350" width="90" height="15" rx="2" fill="rgba(201,151,58,.12)" stroke="#c9973a" stroke-width=".5"/>
+        <text x="315" y="361" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8.5" fill="#e8c06a" letter-spacing="1.5" opacity="1">VICOLO PAGANINI</text>
+
+        <!-- ─── DECORATIVE BORDER ─── -->
+        <rect x="8" y="8" width="544" height="464" fill="none" stroke="#c9973a" stroke-width="1" opacity=".35"/>
+        <rect x="14" y="14" width="532" height="452" fill="none" stroke="#c9973a" stroke-width=".4" opacity=".18"/>
+        <!-- Corner ticks -->
+        <line x1="8" y1="8" x2="30" y2="8" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="8" y1="8" x2="8" y2="30" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="552" y1="8" x2="530" y2="8" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="552" y1="8" x2="552" y2="30" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="8" y1="472" x2="30" y2="472" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="8" y1="472" x2="8" y2="450" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="552" y1="472" x2="530" y2="472" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+        <line x1="552" y1="472" x2="552" y2="450" stroke="#c9973a" stroke-width="2" opacity=".6"/>
+
+        <!-- ─── PIZZERIA PIN ─── -->
+        <!-- Outer pulse rings -->
+        <circle cx="263" cy="358" r="32" fill="url(#pinGlow)" class="pin-pulse-1"/>
+        <circle cx="263" cy="358" r="20" fill="url(#pinGlow)" class="pin-pulse-2"/>
+        <!-- Pin shadow -->
+        <ellipse cx="263" cy="378" rx="10" ry="4" fill="black" opacity=".4"/>
+        <!-- Pin body -->
+        <path d="M 263 320 C 248 320 236 332 236 347 C 236 365 263 385 263 385 C 263 385 290 365 290 347 C 290 332 278 320 263 320 Z"
+              fill="#c9973a" filter="url(#glow)"/>
+        <path d="M 263 320 C 248 320 236 332 236 347 C 236 365 263 385 263 385 C 263 385 290 365 290 347 C 290 332 278 320 263 320 Z"
+              fill="none" stroke="#e8c06a" stroke-width="1.5" opacity=".8"/>
+        <!-- Pin inner circle -->
+        <circle cx="263" cy="347" r="9" fill="#16100a"/>
+        <circle cx="263" cy="347" r="5" fill="#e8c06a"/>
+        <!-- Pin label tag -->
+        <rect x="175" y="296" width="112" height="30" rx="3" fill="rgba(16,11,7,.92)" stroke="#c9973a" stroke-width="1" filter="url(#glow)"/>
+        <text x="231" y="306" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="8" fill="#c9973a" letter-spacing="1.5">PIZZERIA</text>
+        <text x="231" y="320" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#e8c06a" letter-spacing="1" font-weight="700">MARCO</text>
+        <!-- Small connector line from label to pin -->
+        <line x1="231" y1="326" x2="263" y2="320" stroke="#c9973a" stroke-width=".8" stroke-dasharray="3,3" opacity=".5"/>
+
+        <!-- ─── SCALE BAR ─── -->
+        <g transform="translate(28,452)">
+          <line x1="0" y1="0" x2="60" y2="0" stroke="#c9973a" stroke-width="1" opacity=".5"/>
+          <line x1="0" y1="-4" x2="0" y2="4" stroke="#c9973a" stroke-width="1" opacity=".5"/>
+          <line x1="60" y1="-4" x2="60" y2="4" stroke="#c9973a" stroke-width="1" opacity=".5"/>
+          <text x="30" y="-7" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="7.5" fill="#c9973a" opacity=".55" letter-spacing="1">200 m</text>
+        </g>
+
+        <!-- ─── NORTH ARROW ─── -->
+        <g transform="translate(524,38)">
+          <circle cx="0" cy="0" r="14" fill="rgba(19,14,8,.7)" stroke="#c9973a" stroke-width=".8" opacity=".8"/>
+          <polygon points="0,-10 -4,3 0,0 4,3" fill="#c9973a" opacity=".9"/>
+          <polygon points="0,10 -4,-3 0,0 4,-3" fill="#c9973a" opacity=".3"/>
+          <text x="0" y="-15" text-anchor="middle" font-family="'Playfair Display',serif" font-size="9" fill="#c9973a" opacity=".8">N</text>
+        </g>
+
+      </svg>
+    </div>
+
+    <a href="https://maps.google.com/?q=Pizzeria+Marco+Rovereto+Vicolo+Paganini" target="_blank" class="map-open-btn">
+      Apri in Google Maps →
+    </a>
+
+    <div class="map-watermark">Rovereto · Trentino-Alto Adige</div>
+  </div>
+
+  <!-- INFO PANEL -->
+  <div class="info-panel reveal">
+
+    <div class="info-block">
+      <div class="info-block-label">Indirizzo</div>
+      <div class="info-address">Vicolo Paganini<br>38068 Rovereto (TN)</div>
+      <div class="info-address-sub">Vicino al Teatro Zandonai · Centro storico</div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Orari di apertura</div>
+      <table class="hours-table">
+        <tr class="hours-row"><td class="day">Lunedì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Martedì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Mercoledì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row today"><td class="day">Giovedì <span class="today-badge">oggi</span></td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Venerdì</td><td class="time">11:30–14:30 · 18:00–22:30</td></tr>
+        <tr class="hours-row"><td class="day">Sabato</td><td class="time">11:30–14:30 · 18:00–22:30</td></tr>
+        <tr class="hours-row"><td class="day">Domenica</td><td class="time">18:00–22:00</td></tr>
+      </table>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Servizi disponibili</div>
+      <div class="services-grid">
+        <div class="service-item"><span class="service-icon">🍕</span>Consumazione sul posto</div>
+        <div class="service-item"><span class="service-icon">📦</span>Asporto</div>
+        <div class="service-item"><span class="service-icon">🛵</span>Consegna a domicilio</div>
+        <div class="service-item"><span class="service-icon">☀️</span>Terrazza estiva</div>
+        <div class="service-item"><span class="service-icon">🐾</span>Animali benvenuti</div>
+        <div class="service-item"><span class="service-icon">🚗</span>Parcheggio comodo</div>
+        <div class="service-item"><span class="service-icon">🌾</span>Impasto integrale</div>
+        <div class="service-item"><span class="service-icon">✨</span>Impasto Khorasan</div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Come raggiungerci</div>
+      <div class="transport-list">
+        <div class="transport-item">
+          <div class="transport-icon">🚶</div>
+          <div class="transport-text">
+            <strong>A piedi dal centro</strong>
+            5 minuti da Piazza Rosmini, 2 minuti dal Teatro Zandonai.
+          </div>
+        </div>
+        <div class="transport-item">
+          <div class="transport-icon">🚗</div>
+          <div class="transport-text">
+            <strong>In auto</strong>
+            Ampio parcheggio disponibile in Vicolo Paganini e nelle strade adiacenti.
+          </div>
+        </div>
+        <div class="transport-item">
+          <div class="transport-icon">🚂</div>
+          <div class="transport-text">
+            <strong>In treno</strong>
+            Dalla stazione di Rovereto: 12 minuti a piedi verso il centro storico.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://maps.google.com/?q=Pizzeria+Marco+Rovereto" target="_blank" class="btn-primary">Indicazioni stradali</a>
+      <a href="pizzeria-marco-menu.html" class="btn-outline">Vedi il menu</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- NEIGHBOURHOOD -->
+<section class="neighbourhood">
+  <span class="eyebrow reveal">Nei dintorni</span>
+  <h2 class="reveal">Il quartiere <em>intorno a noi</em></h2>
+  <p class="neighbourhood-sub reveal">Siamo nel cuore pulsante di Rovereto — a due passi dalla cultura, dalla storia e dai principali punti d'incontro della città.</p>
+  <div class="poi-grid reveal">
+    <div class="poi-item">
+      <span class="poi-emoji">🎭</span>
+      <div class="poi-name">Teatro Zandonai</div>
+      <div class="poi-desc">Il teatro storico di Rovereto, uno dei più belli del Trentino.</div>
+      <div class="poi-dist">~2 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">🏰</span>
+      <div class="poi-name">Castello di Rovereto</div>
+      <div class="poi-desc">Fortezza medievale che domina la città, oggi sede del MART.</div>
+      <div class="poi-dist">~8 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">🎨</span>
+      <div class="poi-name">MART</div>
+      <div class="poi-desc">Museo di Arte Moderna e Contemporanea di Trento e Rovereto.</div>
+      <div class="poi-dist">~5 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">⛪</span>
+      <div class="poi-name">Piazza Rosmini</div>
+      <div class="poi-desc">Il salotto della città, fulcro della vita sociale roveretana.</div>
+      <div class="poi-dist">~3 min a piedi</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Pizzeria <em>Marco</em></div>
+  <div class="footer-copy">© 2025 Pizzeria Marco · Vicolo Paganini, Rovereto (TN) · Tutti i diritti riservati</div>
+</footer>
+
+<script>
+  // "Oggi" highlight based on actual day
+  const days = document.querySelectorAll('.hours-row');
+  const todayIdx = new Date().getDay(); // 0=Sun, 1=Mon...
+  const map = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
+  days.forEach((row,i) => row.classList.remove('today'));
+  if(days[map[todayIdx]]) {
+    const targetRow = days[map[todayIdx]];
+    targetRow.classList.add('today');
+    const badge = targetRow.querySelector('.today-badge');
+    if(!badge){
+      const dayCell = targetRow.querySelector('.day');
+      const b = document.createElement('span');
+      b.className = 'today-badge'; b.textContent = 'oggi';
+      dayCell.appendChild(b);
+    }
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold:.1 });
+  reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
