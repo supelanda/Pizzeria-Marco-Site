@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dove Siamo — Pizzeria Marco, Rovereto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pizzeria-marco-responsive.css">
+<style>
+  :root {
+    --ink:      #16100a;
+    --charcoal: #1e1710;
+    --deep:     #130e08;
+    --cream:    #f4e9d4;
+    --warm:     #ede0c4;
+    --gold:     #c9973a;
+    --gold-lt:  #e8c06a;
+    --gold-dim: rgba(201,151,58,.18);
+    --terra:    #b85c2c;
+    --muted:    #8a7d68;
+    --border:   rgba(201,151,58,.22);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--charcoal);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    opacity:.4;
+  }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.2rem 4rem;
+    background:rgba(16,11,7,.97);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo {
+    font-family:'Playfair Display',serif; font-size:1.3rem;
+    letter-spacing:.08em; color:var(--gold-lt); text-decoration:none;
+  }
+  .nav-logo span { font-style:italic; color:var(--cream); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a {
+    font-size:.88rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold-lt); }
+  .nav-back {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.9rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s;
+  }
+  .nav-back:hover { color:var(--gold); }
+
+  /* PAGE HERO */
+  .page-hero {
+    position:relative; z-index:1;
+    padding:11rem 4rem 5rem;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+  }
+  .page-hero-inner { max-width:580px; }
+  .eyebrow {
+    font-size:.82rem; letter-spacing:.38em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:1.2rem; display:block;
+    opacity:0; animation:fadeUp .7s .1s forwards;
+  }
+  .page-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3rem,7vw,5.5rem);
+    font-weight:900; line-height:.95; color:var(--cream);
+    opacity:0; animation:fadeUp .8s .25s forwards;
+  }
+  .page-title em { display:block; font-style:italic; color:var(--gold-lt); }
+  .page-sub {
+    margin-top:1.6rem; font-size:1.1rem; color:var(--muted); max-width:420px;
+    opacity:0; animation:fadeUp .8s .4s forwards;
+  }
+  /* Decorative compass in hero */
+  .hero-compass {
+    position:absolute; right:6rem; top:50%; transform:translateY(-50%);
+    width:220px; height:220px; opacity:.06;
+    pointer-events:none;
+    opacity:0; animation:fadeUp 1s .6s forwards;
+  }
+
+  /* MAIN LAYOUT */
+  .main-wrap {
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1fr 1fr;
+    min-height:80vh;
+    border-bottom:1px solid var(--border);
+  }
+
+  /* ── STYLED MAP ── */
+  .map-panel {
+    position:relative; overflow:hidden;
+    background:var(--deep);
+    border-right:1px solid var(--border);
+  }
+
+  /* Subtle dot-grid background for the map area */
+  .map-panel::before {
+    content:''; position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(201,151,58,.14) 1px, transparent 1px);
+    background-size:28px 28px;
+    background-position:14px 14px;
+    pointer-events:none;
+  }
+
+  .map-svg-wrap {
+    position:relative; width:100%; height:100%; min-height:600px;
+  }
+
+  /* Remove SVG-specific rule that no longer applies */
+
+  /* Map watermark label */
+  .map-watermark {
+    position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+    font-size:.65rem; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--muted); opacity:.45;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .map-watermark::before, .map-watermark::after {
+    content:''; width:30px; height:1px; background:currentColor;
+  }
+
+  /* Map corner ornament */
+  .map-corner {
+    position:absolute; top:1.2rem; right:1.2rem;
+    width:60px; height:60px; opacity:.25;
+  }
+
+  /* Open Maps button on map */
+  .map-open-btn {
+    position:absolute; bottom:3.5rem; left:50%; transform:translateX(-50%);
+    font-family:'Cormorant Garamond',serif;
+    font-size:.82rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); text-decoration:none;
+    background:rgba(16,11,7,.85); border:1px solid var(--border);
+    padding:.6rem 1.6rem;
+    backdrop-filter:blur(8px);
+    transition:border-color .2s, background .2s;
+    white-space:nowrap;
+  }
+  .map-open-btn:hover { border-color:var(--gold); background:rgba(201,151,58,.1); }
+
+  /* ── INFO PANEL ── */
+  .info-panel {
+    padding:5rem 4rem;
+    display:flex; flex-direction:column; gap:3.5rem;
+  }
+
+  .info-block {}
+  .info-block-label {
+    font-size:.75rem; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:.8rem;
+  }
+  .info-block-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .info-address {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem; line-height:1.4; color:var(--cream);
+  }
+  .info-address-sub {
+    font-size:.95rem; color:var(--muted); margin-top:.5rem; font-style:italic;
+  }
+
+  /* Hours table */
+  .hours-table { width:100%; }
+  .hours-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:.55rem 0; border-bottom:1px solid rgba(201,151,58,.07);
+    font-size:1rem;
+  }
+  .hours-row:last-child { border-bottom:none; }
+  .hours-row .day { color:var(--muted); font-size:.95rem; }
+  .hours-row .time { color:var(--cream); }
+  .hours-row.today .day,
+  .hours-row.today .time { color:var(--gold); }
+  .today-badge {
+    font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
+    background:rgba(201,151,58,.15); color:var(--gold);
+    padding:.2rem .55rem; border:1px solid var(--border); margin-left:.5rem;
+  }
+  .hours-row.closed .time { color:var(--muted); opacity:.5; }
+
+  /* Services */
+  .services-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:.7rem;
+  }
+  .service-item {
+    display:flex; align-items:center; gap:.7rem;
+    font-size:.9rem; color:var(--muted); padding:.6rem .9rem;
+    border:1px solid var(--border);
+    transition:border-color .2s, color .2s;
+  }
+  .service-item:hover { border-color:rgba(201,151,58,.4); color:var(--cream); }
+  .service-icon { font-size:1.1rem; flex-shrink:0; }
+
+  /* Transport */
+  .transport-list { display:flex; flex-direction:column; gap:.8rem; }
+  .transport-item {
+    display:flex; gap:1rem; align-items:flex-start;
+  }
+  .transport-icon {
+    width:2.2rem; height:2.2rem; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0; color:var(--gold);
+  }
+  .transport-text { font-size:.9rem; color:var(--muted); }
+  .transport-text strong { display:block; color:var(--cream); font-size:.95rem; margin-bottom:.15rem; }
+
+  /* CTA buttons */
+  .cta-row { display:flex; gap:1rem; flex-wrap:wrap; padding-top:1rem; }
+  .btn-primary {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.95rem; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+    background:var(--gold); color:var(--ink);
+    border:none; padding:.85rem 2.2rem; cursor:pointer;
+    text-decoration:none; display:inline-block;
+    transition:background .2s, transform .15s, box-shadow .2s;
+  }
+  .btn-primary:hover { background:var(--gold-lt); transform:translateY(-2px); box-shadow:0 8px 28px rgba(201,151,58,.3); }
+  .btn-outline {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.95rem; letter-spacing:.18em; text-transform:uppercase;
+    background:transparent; color:var(--cream);
+    border:1px solid rgba(244,233,212,.25); padding:.85rem 2.2rem;
+    text-decoration:none; display:inline-block;
+    transition:border-color .2s, color .2s;
+  }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* ── NEIGHBOURHOOD ── */
+  .neighbourhood {
+    position:relative; z-index:1;
+    padding:6rem 4rem;
+    border-bottom:1px solid var(--border);
+  }
+  .neighbourhood h2 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:700; color:var(--cream);
+    margin-bottom:.8rem;
+  }
+  .neighbourhood h2 em { font-style:italic; color:var(--gold-lt); }
+  .neighbourhood-sub { font-size:1.05rem; color:var(--muted); max-width:520px; margin-bottom:3rem; }
+  .poi-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border);
+  }
+  .poi-item {
+    background:var(--charcoal); padding:2rem 1.5rem;
+    transition:background .25s;
+  }
+  .poi-item:hover { background:#221810; }
+  .poi-emoji { font-size:1.8rem; margin-bottom:.7rem; display:block; }
+  .poi-name {
+    font-family:'Playfair Display',serif;
+    font-size:1rem; font-weight:600; color:var(--cream); margin-bottom:.35rem;
+  }
+  .poi-desc { font-size:.85rem; color:var(--muted); line-height:1.45; }
+  .poi-dist {
+    margin-top:.7rem; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold); opacity:.7;
+  }
+
+  /* FOOTER */
+  footer {
+    position:relative; z-index:1;
+    border-top:1px solid var(--border);
+    padding:3rem 0 2rem; text-align:center;
+  }
+  .footer-logo {
+    font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900;
+    color:var(--cream); margin-bottom:.4rem;
+  }
+  .footer-logo em { font-style:italic; color:var(--gold-lt); }
+  .footer-copy { font-size:.8rem; color:var(--muted); opacity:.55; margin-top:.8rem; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .reveal { opacity:0; transform:translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  @media(max-width:900px){
+    nav { padding:1rem 1.5rem; }
+    .nav-links { display:none; }
+    .page-hero { padding:9rem 1.5rem 3.5rem; }
+    .hero-compass { display:none; }
+    .main-wrap { grid-template-columns:1fr; }
+    .map-panel { border-right:none; border-bottom:1px solid var(--border); }
+    .map-svg-wrap { min-height:400px; }
+    .info-panel { padding:3rem 1.5rem; }
+    .neighbourhood { padding:4rem 1.5rem; }
+    .poi-grid { grid-template-columns:1fr 1fr; }
+    .services-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="pizzeria-marco.html" class="nav-logo">Pizzeria <span>Marco</span></a>
+  <ul class="nav-links">
+    <li><a href="pizzeria-marco.html#about">Storia</a></li>
+    <li><a href="pizzeria-marco-menu.html">Menu</a></li>
+    <li><a href="pizzeria-marco-recensioni.html">Recensioni</a></li>
+    <li><a href="#" class="active">Dove siamo</a></li>
+  </ul>
+  <a href="pizzeria-marco.html" class="nav-back">← Home</a>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Apri menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <span class="eyebrow">Rovereto · Trentino</span>
+    <h1 class="page-title">Trovaci<em>al centro.</em></h1>
+    <p class="page-sub">Nel cuore di Rovereto, a due passi dal teatro e dal centro storico — facile da raggiungere, impossibile dimenticare.</p>
+  </div>
+  <!-- Decorative compass rose -->
+  <svg class="hero-compass" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#c9973a" stroke-width="1"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#c9973a" stroke-width=".5" stroke-dasharray="4,6"/>
+    <circle cx="100" cy="100" r="50" fill="none" stroke="#c9973a" stroke-width="1"/>
+    <line x1="100" y1="10" x2="100" y2="190" stroke="#c9973a" stroke-width=".5"/>
+    <line x1="10" y1="100" x2="190" y2="100" stroke="#c9973a" stroke-width=".5"/>
+    <line x1="29" y1="29" x2="171" y2="171" stroke="#c9973a" stroke-width=".3"/>
+    <line x1="171" y1="29" x2="29" y2="171" stroke="#c9973a" stroke-width=".3"/>
+    <polygon points="100,10 94,45 100,40 106,45" fill="#c9973a"/>
+    <polygon points="100,190 94,155 100,160 106,155" fill="#c9973a" opacity=".4"/>
+    <polygon points="10,100 45,94 40,100 45,106" fill="#c9973a" opacity=".4"/>
+    <polygon points="190,100 155,94 160,100 155,106" fill="#c9973a" opacity=".4"/>
+    <text x="100" y="7" text-anchor="middle" fill="#c9973a" font-size="10" font-family="serif">N</text>
+    <text x="100" y="197" text-anchor="middle" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">S</text>
+    <text x="196" y="104" text-anchor="end" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">E</text>
+    <text x="4" y="104" text-anchor="start" fill="#c9973a" font-size="8" font-family="serif" opacity=".5">O</text>
+    <circle cx="100" cy="100" r="6" fill="#c9973a"/>
+    <circle cx="100" cy="100" r="3" fill="#16100a"/>
+  </svg>
+</section>
+
+<!-- MAIN: MAP + INFO -->
+<div class="main-wrap">
+
+  <!-- GOOGLE MAPS -->
+  <div class="map-panel">
+    <div class="map-svg-wrap" style="padding:0; position:relative; overflow:hidden;">
+      <iframe
+        src="https://maps.google.com/maps?q=Pizzeria+Marco,+Vicolo+Paganini,+Rovereto+TN,+Italy&output=embed&z=16"
+        width="100%"
+        height="100%"
+        style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; filter: saturate(.7) contrast(1.05) brightness(.88) hue-rotate(180deg);"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Pizzeria Marco — Vicolo Paganini, Rovereto"
+      ></iframe>
+    </div>
+
+    <a href="https://maps.google.com/?q=Pizzeria+Marco+Rovereto+Vicolo+Paganini" target="_blank" class="map-open-btn">
+      Apri in Google Maps →
+    </a>
+
+    <div class="map-watermark">Rovereto · Trentino-Alto Adige</div>
+  </div>
+
+
+  <!-- INFO PANEL -->
+  <div class="info-panel reveal">
+
+    <div class="info-block">
+      <div class="info-block-label">Indirizzo</div>
+      <div class="info-address">Vicolo Paganini<br>38068 Rovereto (TN)</div>
+      <div class="info-address-sub">Vicino al Teatro Zandonai · Centro storico</div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Orari di apertura</div>
+      <table class="hours-table">
+        <tr class="hours-row"><td class="day">Lunedì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Martedì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Mercoledì</td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row today"><td class="day">Giovedì <span class="today-badge">oggi</span></td><td class="time">11:30–14:30 · 18:00–22:00</td></tr>
+        <tr class="hours-row"><td class="day">Venerdì</td><td class="time">11:30–14:30 · 18:00–22:30</td></tr>
+        <tr class="hours-row"><td class="day">Sabato</td><td class="time">11:30–14:30 · 18:00–22:30</td></tr>
+        <tr class="hours-row"><td class="day">Domenica</td><td class="time">18:00–22:00</td></tr>
+      </table>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Servizi disponibili</div>
+      <div class="services-grid">
+        <div class="service-item"><span class="service-icon">🍕</span>Consumazione sul posto</div>
+        <div class="service-item"><span class="service-icon">📦</span>Asporto</div>
+        <div class="service-item"><span class="service-icon">🛵</span>Consegna a domicilio</div>
+        <div class="service-item"><span class="service-icon">☀️</span>Terrazza estiva</div>
+        <div class="service-item"><span class="service-icon">🐾</span>Animali benvenuti</div>
+        <div class="service-item"><span class="service-icon">🚗</span>Parcheggio comodo</div>
+        <div class="service-item"><span class="service-icon">🌾</span>Impasto integrale</div>
+        <div class="service-item"><span class="service-icon">✨</span>Impasto Khorasan</div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-label">Come raggiungerci</div>
+      <div class="transport-list">
+        <div class="transport-item">
+          <div class="transport-icon">🚶</div>
+          <div class="transport-text">
+            <strong>A piedi dal centro</strong>
+            5 minuti da Piazza Rosmini, 2 minuti dal Teatro Zandonai.
+          </div>
+        </div>
+        <div class="transport-item">
+          <div class="transport-icon">🚗</div>
+          <div class="transport-text">
+            <strong>In auto</strong>
+            Ampio parcheggio disponibile in Vicolo Paganini e nelle strade adiacenti.
+          </div>
+        </div>
+        <div class="transport-item">
+          <div class="transport-icon">🚂</div>
+          <div class="transport-text">
+            <strong>In treno</strong>
+            Dalla stazione di Rovereto: 12 minuti a piedi verso il centro storico.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://maps.google.com/?q=Pizzeria+Marco+Rovereto" target="_blank" class="btn-primary">Indicazioni stradali</a>
+      <a href="pizzeria-marco-menu.html" class="btn-outline">Vedi il menu</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- NEIGHBOURHOOD -->
+<section class="neighbourhood">
+  <span class="eyebrow reveal">Nei dintorni</span>
+  <h2 class="reveal">Il quartiere <em>intorno a noi</em></h2>
+  <p class="neighbourhood-sub reveal">Siamo nel cuore pulsante di Rovereto — a due passi dalla cultura, dalla storia e dai principali punti d'incontro della città.</p>
+  <div class="poi-grid reveal">
+    <div class="poi-item">
+      <span class="poi-emoji">🎭</span>
+      <div class="poi-name">Teatro Zandonai</div>
+      <div class="poi-desc">Il teatro storico di Rovereto, uno dei più belli del Trentino.</div>
+      <div class="poi-dist">~2 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">🏰</span>
+      <div class="poi-name">Castello di Rovereto</div>
+      <div class="poi-desc">Fortezza medievale che domina la città, oggi sede del MART.</div>
+      <div class="poi-dist">~8 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">🎨</span>
+      <div class="poi-name">MART</div>
+      <div class="poi-desc">Museo di Arte Moderna e Contemporanea di Trento e Rovereto.</div>
+      <div class="poi-dist">~5 min a piedi</div>
+    </div>
+    <div class="poi-item">
+      <span class="poi-emoji">⛪</span>
+      <div class="poi-name">Piazza Rosmini</div>
+      <div class="poi-desc">Il salotto della città, fulcro della vita sociale roveretana.</div>
+      <div class="poi-dist">~3 min a piedi</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Pizzeria <em>Marco</em></div>
+  <div class="footer-copy">© 2025 Pizzeria Marco · Vicolo Paganini, Rovereto (TN) · Tutti i diritti riservati</div>
+</footer>
+
+<script>
+  // "Oggi" highlight based on actual day
+  const days = document.querySelectorAll('.hours-row');
+  const todayIdx = new Date().getDay(); // 0=Sun, 1=Mon...
+  const map = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
+  days.forEach((row,i) => row.classList.remove('today'));
+  if(days[map[todayIdx]]) {
+    const targetRow = days[map[todayIdx]];
+    targetRow.classList.add('today');
+    const badge = targetRow.querySelector('.today-badge');
+    if(!badge){
+      const dayCell = targetRow.querySelector('.day');
+      const b = document.createElement('span');
+      b.className = 'today-badge'; b.textContent = 'oggi';
+      dayCell.appendChild(b);
+    }
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold:.1 });
+  reveals.forEach(el => obs.observe(el));
+
+  // Hamburger nav
+  const navEl = document.querySelector('nav');
+  document.getElementById('navHamburger').addEventListener('click', function() {
+    const open = navEl.classList.toggle('nav-open');
+    this.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', e => {
+    if (!navEl.contains(e.target)) navEl.classList.remove('nav-open');
+  });
+</script>
+</body>
+</html>

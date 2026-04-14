@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — Pizzeria Marco, Rovereto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pizzeria-marco-responsive.css">
+<style>
+  :root {
+    --ink:      #16100a;
+    --charcoal: #1e1710;
+    --deep:     #130e08;
+    --panel:    #1a1209;
+    --cream:    #f4e9d4;
+    --warm:     #ede0c4;
+    --gold:     #c9973a;
+    --gold-lt:  #e8c06a;
+    --terra:    #b85c2c;
+    --green:    #4a7c5a;
+    --muted:    #8a7d68;
+    --border:   rgba(201,151,58,.22);
+    --border-s: rgba(201,151,58,.1);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--charcoal);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    opacity:.4;
+  }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.2rem 4rem;
+    background:rgba(16,11,7,.97);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo { font-family:'Playfair Display',serif; font-size:1.3rem; letter-spacing:.08em; color:var(--gold-lt); text-decoration:none; }
+  .nav-logo span { font-style:italic; color:var(--cream); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { font-size:.88rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold-lt); }
+  .nav-cta { font-family:'Cormorant Garamond',serif; font-size:.9rem; letter-spacing:.16em; text-transform:uppercase; background:var(--gold); color:var(--ink); border:none; padding:.65rem 1.8rem; cursor:pointer; font-weight:600; text-decoration:none; display:inline-block; transition:background .2s; }
+  .nav-cta:hover { background:var(--gold-lt); }
+
+  /* PAGE HERO */
+  .page-hero {
+    position:relative; z-index:1;
+    padding:11rem 4rem 5rem;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+    display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:end;
+  }
+  .eyebrow { font-size:.82rem; letter-spacing:.38em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; display:block; opacity:0; animation:fadeUp .7s .1s forwards; }
+  .page-title { font-family:'Playfair Display',serif; font-size:clamp(3.2rem,7vw,5.8rem); font-weight:900; line-height:.92; color:var(--cream); opacity:0; animation:fadeUp .8s .25s forwards; }
+  .page-title em { display:block; font-style:italic; color:var(--gold-lt); }
+  .page-sub { margin-top:1.6rem; font-size:1.05rem; color:var(--muted); max-width:420px; opacity:0; animation:fadeUp .8s .4s forwards; }
+
+  .hero-dough-callout { display:flex; flex-direction:column; gap:1rem; align-items:flex-end; opacity:0; animation:fadeUp .9s .55s forwards; }
+  .hero-dough-callout .dc-label { font-size:.75rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); text-align:right; }
+  .dough-pills { display:flex; gap:.7rem; }
+  .dough-pill { font-family:'Cormorant Garamond',serif; font-size:.88rem; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--border); color:var(--muted); padding:.5rem 1.2rem; cursor:pointer; background:transparent; transition:all .2s; }
+  .dough-pill:hover, .dough-pill.active { background:var(--gold); color:var(--ink); border-color:var(--gold); }
+  .hero-note { font-size:.88rem; font-style:italic; color:var(--muted); text-align:right; max-width:280px; line-height:1.5; }
+
+  .hero-stats { grid-column:1/-1; display:flex; gap:0; border-top:1px solid var(--border); margin-top:1rem; opacity:0; animation:fadeUp .8s .7s forwards; }
+  .stat-item { flex:1; padding:1.4rem 2rem; border-right:1px solid var(--border); display:flex; align-items:center; gap:1rem; }
+  .stat-item:last-child { border-right:none; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--gold); line-height:1; }
+  .stat-label { font-size:.82rem; color:var(--muted); line-height:1.35; }
+  .stat-label strong { display:block; color:var(--cream); font-size:.9rem; }
+
+  /* CONTROLS BAR */
+  .controls-bar {
+    position:sticky; top:65px; z-index:50;
+    background:rgba(18,13,8,.97); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    padding:0 4rem;
+    display:flex; align-items:stretch; gap:0;
+  }
+  .cat-tabs { display:flex; gap:0; flex:1; border-right:1px solid var(--border); overflow-x:auto; }
+  .cat-tab {
+    font-family:'Cormorant Garamond',serif; font-size:.88rem; letter-spacing:.18em; text-transform:uppercase;
+    background:transparent; color:var(--muted); border:none; border-bottom:2px solid transparent;
+    padding:1.2rem 1.5rem; cursor:pointer; transition:color .2s, border-color .2s; white-space:nowrap;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .cat-tab:hover { color:var(--cream); }
+  .cat-tab.active { color:var(--gold-lt); border-bottom-color:var(--gold); }
+  .cat-tab .tab-count { font-size:.7rem; background:var(--border-s); color:var(--muted); padding:.15rem .45rem; transition:background .2s, color .2s; }
+  .cat-tab.active .tab-count { background:rgba(201,151,58,.2); color:var(--gold); }
+
+  .sort-controls { display:flex; align-items:center; gap:0; }
+  .sort-btn { font-family:'Cormorant Garamond',serif; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; background:transparent; color:var(--muted); border:none; border-left:1px solid var(--border); padding:1.2rem 1.3rem; cursor:pointer; transition:color .2s, background .2s; display:flex; align-items:center; gap:.5rem; white-space:nowrap; }
+  .sort-btn:hover { color:var(--cream); background:rgba(201,151,58,.04); }
+  .sort-btn.active { color:var(--gold-lt); background:rgba(201,151,58,.06); }
+  .sort-btn .arr { font-size:.7rem; transition:transform .2s; display:inline-block; }
+  .sort-btn.desc .arr { transform:rotate(180deg); }
+  .veg-btn { font-family:'Cormorant Garamond',serif; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; background:transparent; color:var(--muted); border:none; border-left:1px solid var(--border); padding:1.2rem 1.3rem; cursor:pointer; transition:color .2s; white-space:nowrap; }
+  .veg-btn:hover { color:var(--cream); }
+  .veg-btn.active { color:#6aaa80; }
+  .results-count { font-size:.78rem; letter-spacing:.14em; color:var(--muted); border-left:1px solid var(--border); padding:1.2rem 1.4rem; display:flex; align-items:center; white-space:nowrap; }
+  .results-count b { color:var(--cream); margin:0 .3rem; }
+
+  /* SEARCH */
+  .search-wrap { position:relative; z-index:1; padding:2.2rem 4rem 0; max-width:480px; opacity:0; animation:fadeUp .7s .85s forwards; }
+  .search-input { width:100%; font-family:'Cormorant Garamond',serif; font-size:1rem; letter-spacing:.06em; background:rgba(26,18,9,.8); border:1px solid var(--border); color:var(--cream); padding:.85rem 3rem .85rem 1.4rem; outline:none; transition:border-color .2s; }
+  .search-input::placeholder { color:var(--muted); font-style:italic; }
+  .search-input:focus { border-color:rgba(201,151,58,.5); }
+  .s-icon { position:absolute; right:1.2rem; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
+  .s-clear { position:absolute; right:1.1rem; top:50%; transform:translateY(-50%); color:var(--muted); cursor:pointer; background:none; border:none; padding:.2rem; display:none; transition:color .2s; font-size:.9rem; }
+  .s-clear:hover { color:var(--gold); }
+  .search-wrap.has-value .s-icon { display:none; }
+  .search-wrap.has-value .s-clear { display:block; }
+
+  /* MENU GRID */
+  .menu-area { position:relative; z-index:1; padding:3rem 4rem 8rem; }
+  .menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1px; background:var(--border-s); border:1px solid var(--border); }
+
+  .pizza-card {
+    background:var(--panel); position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:background .25s;
+    opacity:0; animation:cardIn .45s ease forwards;
+  }
+  .pizza-card:hover { background:#211709; }
+  .pizza-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; opacity:0; transition:opacity .25s; }
+  .pizza-card:hover::before { opacity:1; }
+  .pizza-card[data-cat="classiche"]::before   { background:var(--gold); }
+  .pizza-card[data-cat="speciali"]::before    { background:var(--terra); }
+  .pizza-card[data-cat="bianche"]::before     { background:#a89070; }
+  .pizza-card[data-cat="vegetariane"]::before { background:#6aaa80; }
+  .pizza-card.hidden { display:none; }
+
+  .card-inner { padding:2rem 2rem 1.4rem 2.2rem; flex:1; display:flex; flex-direction:column; }
+  .card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.8rem; }
+  .card-badges { display:flex; flex-wrap:wrap; gap:.4rem; }
+  .badge { font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; padding:.22rem .55rem; border:1px solid; }
+  .badge-classiche   { color:var(--gold);  border-color:rgba(201,151,58,.3); background:rgba(201,151,58,.07); }
+  .badge-speciali    { color:var(--terra); border-color:rgba(184,92,44,.3);  background:rgba(184,92,44,.07); }
+  .badge-bianche     { color:#bba880;     border-color:rgba(168,144,112,.3); background:rgba(168,144,112,.07); }
+  .badge-vegetariane { color:#6aaa80;     border-color:rgba(106,170,128,.3); background:rgba(106,170,128,.06); }
+  .badge-chef { color:var(--gold-lt); border-color:rgba(232,192,106,.25); background:rgba(232,192,106,.06); }
+  .badge-new  { color:#d0b890;        border-color:rgba(208,184,144,.25); background:rgba(208,184,144,.05); }
+  .badge-veg  { color:#6aaa80;        border-color:rgba(106,170,128,.3);  background:rgba(106,170,128,.06); }
+
+  .card-name { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--cream); line-height:1.15; }
+  .card-desc { margin-top:.6rem; font-size:.92rem; font-style:italic; color:var(--muted); line-height:1.55; flex:1; }
+
+  .card-doughs { margin-top:1.1rem; display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
+  .dough-label-sm { font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-right:.1rem; }
+  .dough-tag { font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); border:1px solid rgba(138,125,104,.2); padding:.18rem .45rem; transition:all .2s; }
+  .dough-tag.avail { color:var(--gold); border-color:rgba(201,151,58,.3); }
+  .dough-tag.lit   { background:var(--gold); color:var(--ink); border-color:var(--gold); }
+
+  .card-footer { border-top:1px solid var(--border-s); margin-top:1.3rem; padding-top:1rem; display:flex; gap:0; }
+  .size-col { display:flex; flex-direction:column; align-items:center; flex:1; padding:.4rem .4rem; border-right:1px solid var(--border-s); transition:background .2s; }
+  .size-col:last-child { border-right:none; }
+  .size-col:hover { background:rgba(201,151,58,.04); }
+  .size-name  { font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem; }
+  .size-price { font-family:'Playfair Display',serif; font-size:1rem; color:var(--cream); }
+  .size-price.hi { color:var(--gold); }
+  .size-cm { font-size:.56rem; color:var(--muted); opacity:.6; margin-top:.1rem; }
+
+  /* EMPTY */
+  .empty-state { grid-column:1/-1; padding:5rem 2rem; text-align:center; display:none; }
+  .empty-state.on { display:block; }
+  .empty-icon { font-size:2.8rem; margin-bottom:.8rem; opacity:.25; display:block; }
+  .empty-title { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--cream); margin-bottom:.4rem; }
+  .empty-sub { font-size:.92rem; color:var(--muted); font-style:italic; }
+  .empty-reset { margin-top:1.4rem; font-family:'Cormorant Garamond',serif; font-size:.86rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); background:none; border:1px solid var(--border); padding:.6rem 1.5rem; cursor:pointer; transition:border-color .2s; }
+  .empty-reset:hover { border-color:var(--gold); }
+
+  /* DOUGH LEGEND */
+  .dough-legend { position:relative; z-index:1; background:var(--deep); border-top:1px solid var(--border); padding:2.5rem 4rem; display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; }
+  .legend-item {}
+  .legend-name { font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700; color:var(--cream); margin-bottom:.3rem; }
+  .legend-desc { font-size:.85rem; color:var(--muted); line-height:1.45; }
+
+  footer { position:relative; z-index:1; border-top:1px solid var(--border); padding:3rem 0 2rem; text-align:center; }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--cream); }
+  .footer-logo em { font-style:italic; color:var(--gold-lt); }
+  .footer-links { display:flex; gap:2rem; justify-content:center; list-style:none; margin:.7rem 0; }
+  .footer-links a { font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { font-size:.78rem; color:var(--muted); opacity:.5; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes cardIn { to{opacity:1;transform:translateY(0)} }
+  .pizza-card { opacity:0; transform:translateY(10px); }
+
+  @media(max-width:900px){
+    nav { padding:1rem 1.5rem; }
+    .nav-links { display:none; }
+    .page-hero { padding:9rem 1.5rem 3rem; grid-template-columns:1fr; gap:2rem; }
+    .hero-dough-callout { align-items:flex-start; }
+    .hero-note { text-align:left; }
+    .hero-stats { flex-wrap:wrap; }
+    .stat-item { flex:1 1 45%; border-bottom:1px solid var(--border); }
+    .controls-bar { padding:0 1rem; }
+    .search-wrap { padding:1.5rem 1.5rem 0; max-width:100%; }
+    .menu-area { padding:2rem 1rem 5rem; }
+    .dough-legend { padding:2rem 1.5rem; grid-template-columns:1fr; gap:1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="pizzeria-marco.html" class="nav-logo">Pizzeria <span>Marco</span></a>
+  <ul class="nav-links">
+    <li><a href="pizzeria-marco.html#about">Storia</a></li>
+    <li><a href="#" class="active">Menu</a></li>
+    <li><a href="pizzeria-marco-recensioni.html">Recensioni</a></li>
+    <li><a href="pizzeria-marco-dove-siamo.html">Dove siamo</a></li>
+  </ul>
+  <a href="pizzeria-marco-dove-siamo.html" class="nav-cta">Vieni a trovarci</a>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Apri menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="page-hero">
+  <div>
+    <span class="eyebrow">Rovereto · Vicolo Paganini</span>
+    <h1 class="page-title">Il nostro<em>menu.</em></h1>
+    <p class="page-sub">Oltre 30 combinazioni artigianali. Tre farine, dimensioni mini · normale · maxi — al tavolo, da asporto o a domicilio.</p>
+  </div>
+  <div class="hero-dough-callout">
+    <span class="dc-label">Filtra per impasto</span>
+    <div class="dough-pills">
+      <button class="dough-pill active" data-dough="all">Tutti</button>
+      <button class="dough-pill" data-dough="classica">Classica</button>
+      <button class="dough-pill" data-dough="integrale">Integrale</button>
+      <button class="dough-pill" data-dough="khorasan">Khorasan</button>
+    </div>
+    <p class="hero-note">Ogni pizza può essere richiesta in qualsiasi impasto, senza sovrapprezzo.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">32</div><div class="stat-label"><strong>Pizze</strong>classiche, speciali & bianche</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label"><strong>Impasti</strong>classico · integrale · khorasan</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label"><strong>Formati</strong>mini · normale · maxi</div></div>
+    <div class="stat-item"><div class="stat-num">€5</div><div class="stat-label"><strong>Si parte da</strong>pizza al taglio · pranzo rapido</div></div>
+  </div>
+</section>
+
+<div class="search-wrap" id="searchWrap">
+  <input class="search-input" id="searchInput" type="text" placeholder="Cerca per nome o ingrediente…">
+  <span class="s-icon">⌕</span>
+  <button class="s-clear" id="sClear">✕</button>
+</div>
+
+<div class="controls-bar">
+  <div class="cat-tabs" id="catTabs">
+    <button class="cat-tab active" data-cat="all">Tutte <span class="tab-count" id="cnt-all">32</span></button>
+    <button class="cat-tab" data-cat="classiche">Classiche <span class="tab-count" id="cnt-classiche">0</span></button>
+    <button class="cat-tab" data-cat="speciali">Speciali <span class="tab-count" id="cnt-speciali">0</span></button>
+    <button class="cat-tab" data-cat="bianche">Bianche <span class="tab-count" id="cnt-bianche">0</span></button>
+    <button class="cat-tab" data-cat="vegetariane">Vegetariane <span class="tab-count" id="cnt-vegetariane">0</span></button>
+  </div>
+  <div class="sort-controls">
+    <button class="sort-btn active" id="btnName" onclick="sortCards('name')">Nome <span class="arr">↑</span></button>
+    <button class="sort-btn" id="btnPrice" onclick="sortCards('price')">Prezzo <span class="arr">↑</span></button>
+    <button class="sort-btn veg-btn" id="btnVeg" onclick="toggleVeg()">🌿 Solo veg</button>
+    <div class="results-count"><b id="visCount">32</b> pizze</div>
+  </div>
+</div>
+
+<div class="menu-area">
+<div class="menu-grid" id="menuGrid">
+<div class="empty-state" id="emptyState">
+  <span class="empty-icon">🍕</span>
+  <div class="empty-title">Nessuna pizza trovata</div>
+  <div class="empty-sub">Prova un altro filtro o modifica la ricerca.</div>
+  <button class="empty-reset" onclick="resetAll()">Azzera tutti i filtri</button>
+</div>
+
+<!-- CLASSICHE -->
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="boscaiola" data-price="9.00" style="animation-delay:.04s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Boscaiola</div>
+    <div class="card-desc">Salsiccia, funghi porcini, mozzarella, pomodoro, rosmarino. Sapori del bosco trentino.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="capricciosa" data-price="8.50" style="animation-delay:.07s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Capricciosa</div>
+    <div class="card-desc">Prosciutto cotto, funghi, carciofi, olive, mozzarella. La regina della tradizione italiana.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="diavola" data-price="8.00" style="animation-delay:.10s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Diavola</div>
+    <div class="card-desc">Salame piccante, mozzarella, pomodoro, peperoncino calabrese. Per chi vuole il fuoco nel piatto.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="1" data-name="margherita" data-price="6.50" style="animation-delay:.13s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Margherita</div>
+    <div class="card-desc">Pomodoro San Marzano, fior di latte, basilico fresco, olio EVO. La semplicità all'essenziale.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 6,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 9,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="napoli" data-price="8.00" style="animation-delay:.16s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Napoli</div>
+    <div class="card-desc">Pomodoro, mozzarella, acciughe, capperi, origano. Un omaggio alla tradizione partenopea.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="prosciutto crudo" data-price="8.50" style="animation-delay:.19s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Prosciutto Crudo</div>
+    <div class="card-desc">Prosciutto crudo DOP, pomodoro, mozzarella. Un classico di rara eleganza.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="quattro stagioni" data-price="8.50" style="animation-delay:.22s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Quattro Stagioni</div>
+    <div class="card-desc">Prosciutto cotto, funghi, carciofi, olive nere — i quattro angoli del gusto italiano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="romana" data-price="7.50" style="animation-delay:.25s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Romana</div>
+    <div class="card-desc">Pomodoro, mozzarella, prosciutto crudo, rucola fresca, scaglie di grana padano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 7,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 10,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="salamino" data-price="7.50" style="animation-delay:.28s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Salamino</div>
+    <div class="card-desc">Salamino piccante, pomodoro, mozzarella, origano. Semplice, diretta, impeccabile.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 7,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 10,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="speck gorgonzola" data-price="9.50" style="animation-delay:.31s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Speck & Gorgonzola</div>
+    <div class="card-desc">Speck Alto Adige DOP, gorgonzola dolce, noci, miele di montagna. Il Trentino in un morso.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 13,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="tonno cipolla" data-price="8.00" style="animation-delay:.34s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Tonno & Cipolla</div>
+    <div class="card-desc">Tonno del Mediterraneo, cipolla di Tropea, pomodoro, mozzarella, origano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="classiche" data-veg="0" data-name="wurstel patatine" data-price="7.50" style="animation-delay:.37s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-classiche">Classica</span></div></div>
+    <div class="card-name">Wurstel & Patatine</div>
+    <div class="card-desc">Würstel di maiale, patatine fritte, pomodoro, mozzarella. La preferita dei più giovani.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 7,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 10,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<!-- SPECIALI -->
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="bresaola rucola" data-price="9.50" style="animation-delay:.05s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span></div></div>
+    <div class="card-name">Bresaola & Rucola</div>
+    <div class="card-desc">Bresaola della Valtellina, rucola, grana padano, limone, olio EVO su base bianca.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 13,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="1" data-name="cinque formaggi" data-price="10.00" style="animation-delay:.08s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Cinque Formaggi</div>
+    <div class="card-desc">Mozzarella, gorgonzola, asiago DOP, scamorza, grana padano, noci, miele di castagno.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 10,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 14,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="1" data-name="integrale gourmet" data-price="9.50" style="animation-delay:.11s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-chef">✦ Chef</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Integrale Gourmet</div>
+    <div class="card-desc">Base integrale, crema di zucchine, ricotta fresca, noci, scorza di limone bio grattugiata. La nostra firma.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Solo su:</span><span class="dough-tag lit" data-d="integrale">Integrale</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 13,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="khorasan tartufo" data-price="11.00" style="animation-delay:.14s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-chef">✦ Chef</span></div></div>
+    <div class="card-name">Khorasan & Tartufo</div>
+    <div class="card-desc">Base khorasan, crema di tartufo nero, mozzarella di bufala DOP, rucola, scaglie di parmigiano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Solo su:</span><span class="dough-tag lit" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 8,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 11,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 15,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="montanara" data-price="10.00" style="animation-delay:.17s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span></div></div>
+    <div class="card-name">Montanara</div>
+    <div class="card-desc">Speck trentino, porcini trifolati, patate al rosmarino, fonduta di asiago DOP.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 10,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 14,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="nduja friarielli" data-price="9.50" style="animation-delay:.20s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span></div></div>
+    <div class="card-name">'Nduja & Friarielli</div>
+    <div class="card-desc">'Nduja calabrese piccante, friarielli saltati, provola affumicata, pomodorini ciliegia.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 13,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="1" data-name="pera gorgonzola" data-price="9.50" style="animation-delay:.23s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Pera & Gorgonzola</div>
+    <div class="card-desc">Gorgonzola dolce DOP, pere Kaiser caramellate, noci, miele di acacia. Il contrasto perfetto.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 13,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="porchetta trentina" data-price="10.00" style="animation-delay:.26s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-chef">✦ Chef</span></div></div>
+    <div class="card-name">Porchetta Trentina</div>
+    <div class="card-desc">Porchetta artigianale locale, cipolle caramellate, patate schiacciate, rosmarino fresco.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 10,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 14,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="speciali" data-veg="0" data-name="salmone capperi" data-price="10.50" style="animation-delay:.29s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-speciali">Speciale</span><span class="badge badge-new">✶ New</span></div></div>
+    <div class="card-name">Salmone & Capperi</div>
+    <div class="card-desc">Salmone affumicato norvegese, capperi di Pantelleria, cipolla rossa, crème fraîche, aneto.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 8,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 10,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 14,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<!-- BIANCHE -->
+<div class="pizza-card" data-cat="bianche" data-veg="1" data-name="bianca classica" data-price="6.00" style="animation-delay:.05s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Bianca Classica</div>
+    <div class="card-desc">Mozzarella fior di latte, olio EVO, aglio, rosmarino. La purezza assoluta dell'impasto.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 4,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 6,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 8,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="1" data-name="bufala pomodorini" data-price="9.00" style="animation-delay:.08s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Bufala & Pomodorini</div>
+    <div class="card-desc">Mozzarella di bufala DOP, pomodorini confit, basilico, olio al basilico, aceto balsamico.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="1" data-name="funghi tartufo bianca" data-price="10.00" style="animation-delay:.11s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-chef">✦ Chef</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Funghi & Tartufo</div>
+    <div class="card-desc">Mix di funghi trifolati, crema di tartufo bianchetto, mozzarella, timo, grana padano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 7,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 10,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 14,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="0" data-name="mortadella pistacchio" data-price="9.00" style="animation-delay:.14s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-new">✶ New</span></div></div>
+    <div class="card-name">Mortadella & Pistacchio</div>
+    <div class="card-desc">Mortadella di Bologna IGP, crema di pistacchio, stracciatella, scorza di limone.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="1" data-name="patate rosmarino" data-price="7.50" style="animation-delay:.17s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Patate & Rosmarino</div>
+    <div class="card-desc">Patate al forno, rosmarino, mozzarella, scamorza, olio EVO. Comfort food elevato.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 7,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 10,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="0" data-name="scamorza salsiccia" data-price="8.50" style="animation-delay:.20s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span></div></div>
+    <div class="card-name">Scamorza & Salsiccia</div>
+    <div class="card-desc">Scamorza affumicata, salsiccia al finocchietto, cipolla, olio EVO. Niente pomodoro.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="bianche" data-veg="1" data-name="zucca salvia" data-price="8.50" style="animation-delay:.23s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-bianche">Bianca</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Zucca & Salvia</div>
+    <div class="card-desc">Crema di zucca mantovana, mozzarella, salvia fritta, amaretti sbriciolati, grana padano.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<!-- VEGETARIANE -->
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="carciofi olive" data-price="8.00" style="animation-delay:.05s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Carciofi & Olive</div>
+    <div class="card-desc">Cuori di carciofo, olive taggiasche, pomodoro, mozzarella, capperi, prezzemolo fresco.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="cipolla tropea" data-price="7.50" style="animation-delay:.08s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Cipolla di Tropea</div>
+    <div class="card-desc">Cipolla rossa di Tropea caramellata, olive nere, origano, pomodoro, mozzarella, aglio.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 7,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 10,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="datterini burrata" data-price="8.50" style="animation-delay:.11s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Datterini & Burrata</div>
+    <div class="card-desc">Pomodorini datterini confit, burrata pugliese, basilico fresco, origano, olio piccante.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="parmigiana melanzane" data-price="8.50" style="animation-delay:.14s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Parmigiana</div>
+    <div class="card-desc">Melanzane fritte, pomodoro, mozzarella, basilico, grana padano. La tradizione meridionale.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="primavera" data-price="8.50" style="animation-delay:.17s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Primavera</div>
+    <div class="card-desc">Asparagi, pomodorini, carciofi, mozzarella, pistacchio tritato, olio al basilico.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,00</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,50</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="spinaci ricotta" data-price="8.00" style="animation-delay:.20s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Spinaci & Ricotta</div>
+    <div class="card-desc">Spinaci freschi saltati, ricotta di pecora, mozzarella, noce moscata, limone. Delicata e nutriente.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="tre funghi" data-price="9.00" style="animation-delay:.23s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Tre Funghi</div>
+    <div class="card-desc">Champignon, porcini e pleurotus, mozzarella, timo, aglio, olio EVO. Per i veri amanti del bosco.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 6,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 9,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 12,50</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+<div class="pizza-card" data-cat="vegetariane" data-veg="1" data-name="verdure grigliate" data-price="8.00" style="animation-delay:.26s">
+  <div class="card-inner">
+    <div class="card-top"><div class="card-badges"><span class="badge badge-vegetariane">Vegetariana</span><span class="badge badge-veg">🌿 Veg</span></div></div>
+    <div class="card-name">Verdure Grigliate</div>
+    <div class="card-desc">Zucchine, peperoni, melanzane, pomodoro, mozzarella, origano. Il giardino in pizza.</div>
+    <div class="card-doughs"><span class="dough-label-sm">Impasto:</span><span class="dough-tag avail" data-d="classica">Classica</span><span class="dough-tag avail" data-d="integrale">Integrale</span><span class="dough-tag avail" data-d="khorasan">Khorasan</span></div>
+  </div>
+  <div class="card-footer">
+    <div class="size-col"><div class="size-name">Mini</div><div class="size-price">€ 5,50</div><div class="size-cm">22 cm</div></div>
+    <div class="size-col"><div class="size-name">Normale</div><div class="size-price hi">€ 8,00</div><div class="size-cm">30 cm</div></div>
+    <div class="size-col"><div class="size-name">Maxi</div><div class="size-price">€ 11,00</div><div class="size-cm">40 cm</div></div>
+  </div>
+</div>
+
+</div><!-- end menu-grid -->
+</div><!-- end menu-area -->
+
+<div class="dough-legend">
+  <div class="legend-item"><div class="legend-name">🌾 Classica</div><div class="legend-desc">Farina 00, alta idratazione, lievitazione lenta 24h. Leggera, digeribile, la base di riferimento.</div></div>
+  <div class="legend-item"><div class="legend-name">🟤 Integrale</div><div class="legend-desc">Farina integrale macinata a pietra, ricca di fibre. Sapore rustico, straordinariamente digeribile.</div></div>
+  <div class="legend-item"><div class="legend-name">✨ Khorasan</div><div class="legend-desc">Grano antico kamut, profilo proteico superiore, aroma burroso e dorato. La scoperta del palato.</div></div>
+</div>
+
+<footer>
+  <div class="footer-logo">Pizzeria <em>Marco</em></div>
+  <ul class="footer-links">
+    <li><a href="pizzeria-marco.html">Home</a></li>
+    <li><a href="pizzeria-marco-recensioni.html">Recensioni</a></li>
+    <li><a href="pizzeria-marco-dove-siamo.html">Dove siamo</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Pizzeria Marco · Vicolo Paganini, Rovereto (TN)</div>
+</footer>
+
+<script>
+  let activeCat = 'all', activeDough = 'all', vegOnly = false;
+  let sortKey = 'name', sortDir = 1;
+  let searchQ = '';
+
+  const grid = document.getElementById('menuGrid');
+  const empty = document.getElementById('emptyState');
+  const searchInput = document.getElementById('searchInput');
+  const searchWrap = document.getElementById('searchWrap');
+
+  // Count tabs on init
+  function initCounts() {
+    const all = document.querySelectorAll('.pizza-card');
+    document.getElementById('cnt-all').textContent = all.length;
+    ['classiche','speciali','bianche','vegetariane'].forEach(c => {
+      document.getElementById('cnt-'+c).textContent =
+        document.querySelectorAll(`.pizza-card[data-cat="${c}"]`).length;
+    });
+  }
+
+  function render() {
+    const cards = Array.from(document.querySelectorAll('.pizza-card'));
+    let n = 0;
+    cards.forEach(card => {
+      const cat   = activeCat === 'all' || card.dataset.cat === activeCat;
+      const veg   = !vegOnly  || card.dataset.veg === '1';
+      const q     = !searchQ  || card.dataset.name.includes(searchQ) ||
+                    card.querySelector('.card-desc').textContent.toLowerCase().includes(searchQ);
+      let dough = true;
+      if (activeDough !== 'all') {
+        const tag = card.querySelector(`.dough-tag[data-d="${activeDough}"]`);
+        dough = tag && (tag.classList.contains('avail') || tag.classList.contains('lit'));
+      }
+      const show = cat && veg && q && dough;
+      card.classList.toggle('hidden', !show);
+      if (show) n++;
+      // highlight active dough tag
+      card.querySelectorAll('.dough-tag').forEach(t => {
+        const match = activeDough !== 'all' && t.dataset.d === activeDough &&
+                      (t.classList.contains('avail') || t.classList.contains('lit'));
+        t.classList.toggle('lit', match && !t.classList.contains('avail') ? false : match);
+      });
+    });
+    document.getElementById('visCount').textContent = n;
+    empty.classList.toggle('on', n === 0);
+  }
+
+  function sortCards(key) {
+    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    document.querySelectorAll('.sort-btn[id^=btn]').forEach(b => b.classList.remove('active','desc'));
+    const btn = document.getElementById('btn' + key.charAt(0).toUpperCase() + key.slice(1));
+    btn.classList.add('active');
+    if (sortDir === -1) btn.classList.add('desc');
+    const cards = Array.from(document.querySelectorAll('.pizza-card'));
+    cards.sort((a,b) => {
+      if (key === 'price') return (parseFloat(a.dataset.price) - parseFloat(b.dataset.price)) * sortDir;
+      return a.dataset.name.localeCompare(b.dataset.name, 'it') * sortDir;
+    });
+    cards.forEach(c => grid.appendChild(c));
+    grid.appendChild(empty);
+    render();
+  }
+
+  function toggleVeg() {
+    vegOnly = !vegOnly;
+    document.getElementById('btnVeg').classList.toggle('active', vegOnly);
+    render();
+  }
+
+  document.getElementById('catTabs').addEventListener('click', e => {
+    const t = e.target.closest('.cat-tab'); if (!t) return;
+    activeCat = t.dataset.cat;
+    document.querySelectorAll('.cat-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active'); render();
+  });
+
+  document.querySelectorAll('.dough-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      activeDough = p.dataset.dough;
+      document.querySelectorAll('.dough-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active'); render();
+    });
+  });
+
+  searchInput.addEventListener('input', () => {
+    searchQ = searchInput.value.toLowerCase().trim();
+    searchWrap.classList.toggle('has-value', searchQ.length > 0);
+    render();
+  });
+  document.getElementById('sClear').addEventListener('click', () => {
+    searchInput.value = ''; searchQ = '';
+    searchWrap.classList.remove('has-value'); render();
+  });
+
+  function resetAll() {
+    activeCat = 'all'; activeDough = 'all'; vegOnly = false;
+    sortKey = 'name'; sortDir = 1; searchQ = '';
+    searchInput.value = ''; searchWrap.classList.remove('has-value');
+    document.querySelectorAll('.cat-tab').forEach(x => x.classList.remove('active'));
+    document.querySelector('.cat-tab[data-cat="all"]').classList.add('active');
+    document.querySelectorAll('.dough-pill').forEach(x => x.classList.remove('active'));
+    document.querySelector('.dough-pill[data-dough="all"]').classList.add('active');
+    document.querySelectorAll('.sort-btn').forEach(x => x.classList.remove('active','desc'));
+    document.getElementById('btnName').classList.add('active');
+    document.getElementById('btnVeg').classList.remove('active');
+    const cards = Array.from(document.querySelectorAll('.pizza-card'));
+    cards.sort((a,b) => a.dataset.name.localeCompare(b.dataset.name,'it'));
+    cards.forEach(c => grid.appendChild(c)); grid.appendChild(empty);
+    render();
+  }
+
+  initCounts();
+  render();
+
+  // Hamburger nav
+  const navEl = document.querySelector('nav');
+  document.getElementById('navHamburger').addEventListener('click', function() {
+    const open = navEl.classList.toggle('nav-open');
+    this.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', e => {
+    if (!navEl.contains(e.target)) navEl.classList.remove('nav-open');
+  });
+</script>
+</body>
+</html>
